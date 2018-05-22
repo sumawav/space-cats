@@ -80,9 +80,11 @@ const CreateGame = (opts) => {
         })
     }
     const draw = () => { 
+        state.renderer.cls()
         boards.map((b) => {
             b.draw(state.gl);
-        })        
+        })
+        state.renderer.flush()
     }
     state = {
         initialize: (canvasElementId, callback) => {
@@ -103,7 +105,7 @@ const CreateGame = (opts) => {
                 callback();
         },
         setBoard: (num, board) => {
-            state.boards[num] = board
+            boards[num] = board
         }
     }
     return Object.assign(state)
@@ -139,7 +141,7 @@ const CreateSpriteSheet = (opts) => {
 }
 
 const CreateTitleScreen = (title, subtitle, game, callback) => {
-    const c = document.createElement("canvas")
+    let c = document.createElement("canvas")
     c.width = game.maxX
     c.height = game.maxY
     const ctx = c.getContext("2d")
@@ -149,25 +151,45 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
     ctx.fillText(title, c.width/2, c.height/2);
     ctx.fillText(subtitle, c.width/2, (c.height/2) + 40);
     const cTexture = TCTex(game.gl, c, c.width, c.height)
+    c = null
     let up = false
 
     let state = {
+        x: 0,
+        y: 0,
+        scrollYDirection: false, // false - down, true - up
+        scrollXDirection: false, // false - left, true - right
         step: (dt) => {
-            if (game.keys["space"]) {
+            if (state.y >= cTexture.height/2) 
+                state.scrollYDirection = true
+            if (state.y <= -cTexture.height/2)
+                state.scrollYDirection = false
+            if (state.x >= cTexture.width/2) 
+                state.scrollXDirection = true
+            if (state.x <= -cTexture.width/2)
+                state.scrollXDirection = false
+            let dY = state.scrollYDirection ? -4 : 6
+            let dX = state.scrollXDirection ? -8 : 7
+            state.y += dY/2
+            state.x += dX/2
+
+            if (!game.keys["space"])
+                up = true
+            if (up && game.keys["space"]) {
                 if (typeof callback === "function")
                     callback()
             }
         },
         draw: () => {
             game.renderer.img(
-                testTexture,
+                cTexture,
                 0,
                 0,
-                test.width,
-                test.height,
+                cTexture.width,
+                cTexture.height,
                 0,
-                0,
-                0,
+                state.x, //x
+                state.y, //y
                 1,
                 1,
                 0,
@@ -177,5 +199,77 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
             )
         }
     }
+    return Object.assign(state)
+}
+
+const CreateGameBoard = () => {
+    let state = {
+        objects: [],
+        cnt: {},
+        add: (obj) => {
+            obj.board = state
+            state.objects.push(obj)
+            state.cnt[obj.type] = (state.cnt[obj.type] || 0) + 1
+            return obj
+        },
+        remove: (obj) => {
+            let idx = state.removed.indexOf(obj)
+            if (idx === -1) {
+                state.removed.push(obj)
+                return true
+            } else {
+                return false
+            }
+        },
+        resetRemoved: () => state.removed = [],
+        finalizeRemoved: () => {
+            state.removed.forEach((e) => {
+                let idx = state.objects.indexOf(e)
+                if (idx !== -1) {
+                    state.cnt[e.type]--
+                    state.objects.splice(idx, 1)
+                }
+            })
+        },
+        iterate: function (funcName) {
+            var args = Array.prototype.slice.call(arguments, 1)
+            state.objects.forEach((e,i) => {
+                e[funcName].apply(e, args)
+            })
+        },
+        detect: (func) => {
+            return state.objects.find((e) => {
+                return func.call(e)
+            }) || false
+        },
+        step: (dt) => {
+            state.resetRemoved()
+            state.iterate("step", dt)
+            state.finalizeRemoved()
+        },
+        draw: (ctx) => {
+            state.iterate("draw", ctx)
+        },
+        // TODO:
+        // these variable names will likely change
+        overlap: (o1, o2) => {
+            return !((o1.y+o1.h-1<o2.y) || 
+                    (o1.y>o2.y+o2.h-1) ||
+                    (o1.x+o1.w-1<o2.x) || 
+                    (o1.x>o2.x+o2.w-1))
+        },
+        // TODO: 
+        // this is most likely broken, will deal with later
+        collide: (obj, type) => {
+            return state.detect(() => {
+                if(obj != this) {
+                    var col = (!type || this.type & type) && board.overlap(obj,this);
+                    return col ? this : false;
+                }
+            })
+        }
+
+    }
+
     return Object.assign(state)
 }
