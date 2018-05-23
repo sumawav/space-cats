@@ -45,8 +45,8 @@ const CreateGame = (opts) => {
         }, false)
         state.canvas.onmousedown = function (evt) {
             console.log("mouse down")
-            // add = true
-            // currentFrame = (currentFrame + 1) % frames.length    
+            console.log("canvas x: " + evt.layerX)
+            console.log("canvas y: " + evt.layerY)
         }
         state.canvas.onmouseup = function (evt) {
             console.log("mouse up")

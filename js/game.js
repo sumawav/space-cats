@@ -23,7 +23,7 @@ const startGame = () => {
     )
     let starField = CreateStarField(
         game,
-        1028,    //count
+        512,    //count
         32,     //depth
         128,    //density
         game.maxX/4,
@@ -90,7 +90,7 @@ const CreateStarField = (game, count, depth, density, centerX, centerY) => {
                         z: state.depth
                     }
                 let k = density / star.z
-                star.px = k * star.x + state.centerX
+                star.px = k * star.x + state.centerX 
                 star.py = k * star.y + state.centerY
                 star.size = (1 - star.z / depth) * 2
                 a[i] = star
@@ -101,8 +101,8 @@ const CreateStarField = (game, count, depth, density, centerX, centerY) => {
             state.stars.forEach((star) => {
                 if (star.px >= 0 && star.px <= game.maxX && 
                     star.py >= 0 && star.py <= game.maxY) {
-                    let shade = parseInt((1 - star.z / depth) * 255);
-                    let shadeStr = shade.toString(16)
+                    // let shade = parseInt(Math.min((1 - star.z / depth)*1.5,1) * 255);
+                    // let shadeStr = shade.toString(16)
                     // game.renderer.col = "0xFF" + shadeStr + shadeStr + shadeStr
                     game.renderer.img(
                         cTexture,
