@@ -15,17 +15,16 @@ const spriteSheet = CreateSpriteSheet()
 
 const startGame = () => {
     game.renderer.bkg(0.0, 0.0, 0.0);
-    let titleScreenBoard = CreateTitleScreen(
-        "SPACE CATS",
-        "",
+    let titleScreenBoard = CreateMainTitle(
         game,
+        "SPACE CATS",
+        "press spacebar",
         playGame
     )
     let starField = CreateStarField(game, { 
-        centerX: game.maxX/4,
-        centerY: game.maxY/4 
-    }
-
+            centerX: game.maxX/4,
+            centerY: game.maxY/4 
+        }
     )
     game.setBoard(0, starField)
     game.setBoard(1, titleScreenBoard)
@@ -37,7 +36,6 @@ const playGame = () => {
     board.add(cat)
     console.log(cat)
     game.setBoard(1, board)
-
 }
 
 const loadSprites = () => {

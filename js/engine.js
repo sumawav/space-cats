@@ -156,7 +156,7 @@ const CreateSpriteSheet = (opts) => {
     return Object.assign(state)
 }
 
-const CreateTitleScreen = (title, subtitle, game, callback) => {
+const CreateCard = (game, title, subtitle, callback) => {
     let c = document.createElement("canvas")
     c.width = game.maxX
     c.height = 200
@@ -166,6 +166,7 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
     ctx.textBaseline = "middle"
     ctx.font = "normal bold 40px kremlin"
     ctx.fillText(title, c.width/2, c.height/2)
+    ctx.font = "normal bold 20px kremlin"
     ctx.fillText(subtitle, c.width/2, (c.height/2) + 40)
     const cTexture = TCTex(game.gl, c, c.width, c.height)
     c = null
@@ -174,19 +175,8 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
     let state = {
         x: game.maxX / 2,
         y: game.maxY / 2,
-        scrollYDirection: false,    // false - up, true - down
-        scrollXDirection: false,    // false - left, true - right
-        rotationDir: true,         // true - CW, true - false
+        tex: cTexture,
         step: (dt) => {
-            if (state.y >= (game.maxY - cTexture.height/4))   state.scrollYDirection = false
-            if (state.y <= 0 + cTexture.height/4)           state.scrollYDirection = true
-            if (state.x >= game.maxX - cTexture.width/4)   state.scrollXDirection = false
-            if (state.x <= 0 + cTexture.width/4)           state.scrollXDirection = true
-            let dY = state.scrollYDirection ? 6: -4
-            let dX = state.scrollXDirection ? 7 : -8 
-            state.y += dY/2
-            state.x += dX/2
-
             if (!game.keys["space"])
                 up = true
             if (up && game.keys["space"]) {
@@ -196,11 +186,11 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
         },
         draw: () => {
             game.renderer.img(
-                cTexture,
-                -cTexture.width/2,
-                -cTexture.height/2,
-                cTexture.width,
-                cTexture.height,
+                state.tex,
+                -state.tex.width/2,
+                -state.tex.height/2,
+                state.tex.width,
+                state.tex.height,
                 0,
                 state.x, //x
                 state.y, //y
@@ -214,6 +204,34 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
         }
     }
     return Object.assign(state)
+}
+
+const CreateMainTitle = (game, title, subtitle, callback) => {
+    let card = CreateCard(game, title, subtitle, callback)
+
+    let state = {
+        scrollYDirection: false,    // false - up, true - down
+        scrollXDirection: false,    // false - left, true - right
+        rotationDir: true,         // true - CW, true - false        
+        step: (dt) => {
+            if (card.y >= (game.maxY - card.tex.height/4))   card.scrollYDirection = false
+            if (card.y <= 0 + card.tex.height/4)           card.scrollYDirection = true
+            if (card.x >= game.maxX - card.tex.width/4)   card.scrollXDirection = false
+            if (card.x <= 0 + card.tex.width/4)           card.scrollXDirection = true
+            let dY = card.scrollYDirection ? 6: -4
+            let dX = card.scrollXDirection ? 7 : -8 
+            card.y += dY/2
+            card.x += dX/2
+
+            if (!game.keys["space"])
+                up = true
+            if (up && game.keys["space"]) {
+                if (typeof callback === "function")
+                    callback()
+            }
+        }
+    }
+    return Object.assign(card, state)
 }
 
 const CreateGameBoard = () => {
@@ -310,4 +328,3 @@ const CreateSprite = (spritesheet) => {
     }
     return Object.assign(state)
 }
-
