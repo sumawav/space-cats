@@ -16,8 +16,8 @@ const spriteSheet = CreateSpriteSheet()
 const startGame = () => {
     game.renderer.bkg(0.0, 0.0, 0.0);
     let titleScreenBoard = CreateTitleScreen(
-        "hello world",
-        "foo bar baz",
+        "SPACE CATS",
+        "",
         game,
         playGame
     )
