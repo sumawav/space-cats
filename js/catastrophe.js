@@ -76,8 +76,7 @@ const canDraw = (state) => ({
     draw: () => {
         canvas.img(
             state.texture,
-            // -state.halfWidth,
-            0,
+            0, // -state.halfWidth,
             0,
             state.width,
             state.height,

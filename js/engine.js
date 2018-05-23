@@ -20,45 +20,45 @@ const CreateGame = (opts) => {
         38:"up", 
         39:"right", 
         40:"down"
-    };
+    }
     const STEP = 1000 / 60
     const timestamp = () => {
         return window.performance && 
             window.performance.now ? 
             window.performance.now() : 
-            new Date().getTime();
+            new Date().getTime()
     }
     const setupInput = () => {
         state.keys = {}
         window.addEventListener('keydown', function (e) {
-            // console.log(e.keyCode);
+            // console.log(e.keyCode)
             if (KEY_CODES[e.keyCode]) {
-                state.keys[KEY_CODES[e.keyCode]] = true;
-                e.preventDefault();
+                state.keys[KEY_CODES[e.keyCode]] = true
+                e.preventDefault()
             }
         }, false)
         window.addEventListener('keyup', function (e) {
             if (KEY_CODES[e.keyCode]) {
-                state.keys[KEY_CODES[e.keyCode]] = false;
-                e.preventDefault();
+                state.keys[KEY_CODES[e.keyCode]] = false
+                e.preventDefault()
             }
         }, false)
         state.canvas.onmousedown = function (evt) {
             console.log("mouse down")
-            // add = true;
-            // currentFrame = (currentFrame + 1) % frames.length;    
-        };
+            // add = true
+            // currentFrame = (currentFrame + 1) % frames.length    
+        }
         state.canvas.onmouseup = function (evt) {
             console.log("mouse up")
-            // add = false;
-        };
+            // add = false
+        }
         state.canvas.ontouchstart = function (evt) {
-            // add = true;
-            // currentFrame = (currentFrame + 1) % frames.length;
-        };
+            // add = true
+            // currentFrame = (currentFrame + 1) % frames.length
+        }
         state.canvas.ontouchend = function (evt) {
-            // add = false;
-        };
+            // add = false
+        }
     }
     const loop = () => {
         if (options.debug)
@@ -73,7 +73,6 @@ const CreateGame = (opts) => {
         last = now
         requestAnimationFrame(loop)
     }
-    // temporary
     const update = (step) => { 
         boards.map((b) => {
             b.step(step)
@@ -82,7 +81,7 @@ const CreateGame = (opts) => {
     const draw = () => { 
         state.renderer.cls()
         boards.map((b) => {
-            b.draw(state.gl);
+            b.draw(state.gl)
         })
         state.renderer.flush()
     }
@@ -102,7 +101,7 @@ const CreateGame = (opts) => {
             loop()
 
             if (typeof callback === "function")
-                callback();
+                callback()
         },
         setBoard: (num, board) => {
             boards[num] = board
@@ -116,12 +115,13 @@ const CreateSpriteSheet = (opts) => {
         state = { map: {} }
 
     state = {
-        load: (spriteData, gl, callback) => {
+        load: (spriteData, renderer, callback) => {
             state.map = spriteData
+            state.renderer = renderer
             let image = new Image()
             image.onload = () => {
                 state.texture = TCTex(
-                    gl, 
+                    state.renderer.g, 
                     image,
                     image.width,
                     image.height
@@ -131,10 +131,26 @@ const CreateSpriteSheet = (opts) => {
             }
             image.src = "img/cats.png"
         },
-        draw: (canvas, sprite, x, y, frame) => {
-            // canvas = TC object
-            // sprite = frame dimensions
-            // 
+        draw: (sprite, x, y, frameNumber) => {
+            let frame = state.map[sprite],
+                tex = state.texture
+                u0 = frame.sx / tex.width,
+                v0 = frame.sy / tex.height,
+                u1 = u0 + (frame.w / tex.width),
+                v1 = v0 + (frame.h / tex.height)
+            state.renderer.img(
+                tex,
+                0,0,                // defines "anchor" point of sprite
+                frame.w, 
+                frame.h,
+                0,                  // rotation
+                x, y,               // translation
+                1,1,                // scale (x, y)
+                u0,                 // These values are x, y, w, h
+                v0,                 // for the texture normalized
+                u1,                 // to [0-1]
+                v1                  // I hope that makes sense
+            )
         }
     }
     return Object.assign(state)
@@ -145,11 +161,11 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
     c.width = game.maxX
     c.height = game.maxY
     const ctx = c.getContext("2d")
-    ctx.fillStyle = "#000000"
+    ctx.fillStyle = "#FFFFFF"
     ctx.textAlign = "center"
     ctx.font = "normal bold 40px kremlin"
-    ctx.fillText(title, c.width/2, c.height/2);
-    ctx.fillText(subtitle, c.width/2, (c.height/2) + 40);
+    ctx.fillText(title, c.width/2, c.height/2)
+    ctx.fillText(subtitle, c.width/2, (c.height/2) + 40)
     const cTexture = TCTex(game.gl, c, c.width, c.height)
     c = null
     let up = false
@@ -231,6 +247,8 @@ const CreateGameBoard = () => {
                 }
             })
         },
+        // Interestingly, arrow functions don't have the arguments variable
+        // that's why I'm using the classic syntax here
         iterate: function (funcName) {
             var args = Array.prototype.slice.call(arguments, 1)
             state.objects.forEach((e,i) => {
@@ -263,13 +281,35 @@ const CreateGameBoard = () => {
         collide: (obj, type) => {
             return state.detect(() => {
                 if(obj != this) {
-                    var col = (!type || this.type & type) && board.overlap(obj,this);
-                    return col ? this : false;
+                    var col = (!type || this.type & type) && board.overlap(obj,this)
+                    return col ? this : false
                 }
             })
         }
 
     }
-
     return Object.assign(state)
 }
+
+const CreateSprite = (spritesheet) => {
+    let state = {
+        setup: (sprite, props) => {
+            state.sprite = sprite
+            state.merge(props)
+            state.frame = state.frame || 0
+            state.w = spritesheet.map[sprite].w
+            state.h = spritesheet.map[sprite].h
+        },
+        merge: (props) => {
+            if (!props) 
+                return
+            Object.assign(state, props)
+        },
+        draw: (ctx) => {
+            spritesheet.draw(state.sprite, state.x, state.y, null)
+        },
+        step: () => {}
+    }
+    return Object.assign(state)
+}
+
