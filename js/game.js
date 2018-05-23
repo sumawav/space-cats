@@ -21,13 +21,11 @@ const startGame = () => {
         game,
         playGame
     )
-    let starField = CreateStarField(
-        game,
-        512,    //count
-        32,     //depth
-        128,    //density
-        game.maxX/4,
-        game.maxY/4 
+    let starField = CreateStarField(game, { 
+        centerX: game.maxX/4,
+        centerY: game.maxY/4 
+    }
+
     )
     game.setBoard(0, starField)
     game.setBoard(1, titleScreenBoard)
@@ -50,18 +48,25 @@ window.addEventListener("load", () => {
     game.initialize("canvas", loadSprites) 
 })
 
-const CreateStarField = (game, count, depth, density, centerX, centerY) => {
+const CreateStarField = (game, opt) => {
+    var options = {
+        count: opt.count || 512,
+        depth: opt.depth || 32,
+        density: opt.density || 128,
+        centerX: opt.centerX || game.maxX/2,
+        centerY: opt.centerY || game.maxY
+    }
     let stars = []
 
     const randomRange = (minVal,maxVal) => {
         return Math.floor(Math.random() * (maxVal - minVal - 1)) + minVal;
     }
 
-    for (let i = 0; i < count; ++i){
+    for (let i = 0; i < options.count; ++i){
         stars[i] = {
             x: randomRange(-25,25),
             y: randomRange(-25,25),
-            z: randomRange(0, depth)
+            z: randomRange(0, options.depth)
         }
     }
 
@@ -76,10 +81,10 @@ const CreateStarField = (game, count, depth, density, centerX, centerY) => {
 
     let state = {
         stars: stars,
-        depth: depth,
-        density: density,
-        centerX: centerX,
-        centerY: centerY,
+        depth: options.depth,
+        density: options.density,
+        centerX: options.centerX,
+        centerY: options.centerY,
         step: () => {
             state.stars.forEach((star, i, a) => {
                 star.z -= 0.2
@@ -89,10 +94,10 @@ const CreateStarField = (game, count, depth, density, centerX, centerY) => {
                         y: randomRange(-25,25),
                         z: state.depth
                     }
-                let k = density / star.z
+                let k = state.density / star.z
                 star.px = k * star.x + state.centerX 
                 star.py = k * star.y + state.centerY
-                star.size = (1 - star.z / depth) * 2
+                star.size = (1 - star.z / state.depth) * 2
                 a[i] = star
             })
         },
