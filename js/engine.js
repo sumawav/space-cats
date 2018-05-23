@@ -159,10 +159,11 @@ const CreateSpriteSheet = (opts) => {
 const CreateTitleScreen = (title, subtitle, game, callback) => {
     let c = document.createElement("canvas")
     c.width = game.maxX
-    c.height = game.maxY
+    c.height = 200
     const ctx = c.getContext("2d")
     ctx.fillStyle = "#FFFFFF"
     ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
     ctx.font = "normal bold 40px kremlin"
     ctx.fillText(title, c.width/2, c.height/2)
     ctx.fillText(subtitle, c.width/2, (c.height/2) + 40)
@@ -171,21 +172,18 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
     let up = false
 
     let state = {
-        x: 0,
-        y: 0,
-        scrollYDirection: false, // false - down, true - up
-        scrollXDirection: false, // false - left, true - right
+        x: game.maxX / 2,
+        y: game.maxY / 2,
+        scrollYDirection: false,    // false - up, true - down
+        scrollXDirection: false,    // false - left, true - right
+        rotationDir: true,         // true - CW, true - false
         step: (dt) => {
-            if (state.y >= cTexture.height/2) 
-                state.scrollYDirection = true
-            if (state.y <= -cTexture.height/2)
-                state.scrollYDirection = false
-            if (state.x >= cTexture.width/2) 
-                state.scrollXDirection = true
-            if (state.x <= -cTexture.width/2)
-                state.scrollXDirection = false
-            let dY = state.scrollYDirection ? -4 : 6
-            let dX = state.scrollXDirection ? -8 : 7
+            if (state.y >= (game.maxY - cTexture.height/4))   state.scrollYDirection = false
+            if (state.y <= 0 + cTexture.height/4)           state.scrollYDirection = true
+            if (state.x >= game.maxX - cTexture.width/4)   state.scrollXDirection = false
+            if (state.x <= 0 + cTexture.width/4)           state.scrollXDirection = true
+            let dY = state.scrollYDirection ? 6: -4
+            let dX = state.scrollXDirection ? 7 : -8 
             state.y += dY/2
             state.x += dX/2
 
@@ -199,8 +197,8 @@ const CreateTitleScreen = (title, subtitle, game, callback) => {
         draw: () => {
             game.renderer.img(
                 cTexture,
-                0,
-                0,
+                -cTexture.width/2,
+                -cTexture.height/2,
                 cTexture.width,
                 cTexture.height,
                 0,
