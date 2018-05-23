@@ -176,6 +176,7 @@ const CreateCard = (game, title, subtitle, callback) => {
         x: game.maxX / 2,
         y: game.maxY / 2,
         tex: cTexture,
+        rot: 0,
         step: (dt) => {
             if (!game.keys["space"])
                 up = true
@@ -191,7 +192,7 @@ const CreateCard = (game, title, subtitle, callback) => {
                 -state.tex.height/2,
                 state.tex.width,
                 state.tex.height,
-                0,
+                state.rot,
                 state.x, //x
                 state.y, //y
                 1,
@@ -218,6 +219,13 @@ const CreateMainTitle = (game, title, subtitle, callback) => {
             if (card.y <= 0 + card.tex.height/4)           card.scrollYDirection = true
             if (card.x >= game.maxX - card.tex.width/4)   card.scrollXDirection = false
             if (card.x <= 0 + card.tex.width/4)           card.scrollXDirection = true
+            
+            if (card.rot > Math.PI/8)
+                state.rotationDir = false
+            if (card.rot < -Math.PI/8)
+                state.rotationDir = true
+            card.rot += state.rotationDir ? .009 : -.01
+
             let dY = card.scrollYDirection ? 6: -4
             let dX = card.scrollXDirection ? 7 : -8 
             card.y += dY/2
