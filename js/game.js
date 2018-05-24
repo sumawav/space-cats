@@ -3,6 +3,7 @@ const SPRITES = {
     orange_cat: { sx: 0, sy: 32, w: 32, h: 32, frames: 1 },
     black_cat:  { sx: 0, sy: 64, w: 32, h: 32, frames: 1 },
     purple_cat: { sx: 0, sy: 96, w: 32, h: 32, frames: 1 },
+    cat_missile:{ sx: 8, sy:32 + 8, w: 4, h: 16, frames: 1 },
 };
 
 var deleteme = 0
@@ -22,9 +23,8 @@ const startGame = () => {
         playGame
     )
     let starField = CreateStarField(game, { 
-            centerX: game.maxX/4,
-            centerY: game.maxY/4 
-        }
+        centerX: game.maxX/4,
+        centerY: game.maxY/4 }
     )
     game.setBoard(0, starField)
     game.setBoard(1, titleScreenBoard)
@@ -140,7 +140,7 @@ const CreateCat = (spritesheet, game, props) => {
         x: game.maxX / 2,
         y: game.maxY / 2,
         step: () => {
-            if (game.keys["right"]) {
+            if (game.keys.right) {
                 sprite.x += 3
                 // game.keys.right = false
             }
@@ -156,7 +156,36 @@ const CreateCat = (spritesheet, game, props) => {
                 sprite.y -= 3
                 // game.keys.up = false
             }
+            if (game.keys.space) {
+                let cmL = CreateCatMissile(
+                    game, spriteSheet, sprite.x, sprite.y
+                )
+                let cmR = CreateCatMissile(
+                    game, spriteSheet, sprite.x+sprite.w, sprite.y
+                )
+                sprite.board.add(cmL)
+                sprite.board.add(cmR)
+                game.keys.space = false
+            }
         }
     }
+    return Object.assign(sprite, state)
+}
+
+const CreateCatMissile = (game, spritesheet, x, y) => {
+    let sprite = CreateSprite(spritesheet)
+
+    sprite.setup("cat_missile", { vy: -7, damage: 10 })
+
+    let state = {
+        x: x - sprite.w/2,
+        y: y - sprite.h,
+        step: (dt) => {
+            sprite.y += sprite.vy
+            if (sprite.y < -sprite.h)
+                sprite.board.remove(sprite)
+        }
+    }
+
     return Object.assign(sprite, state)
 }

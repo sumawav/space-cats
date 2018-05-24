@@ -105,6 +105,12 @@ const CreateGame = (opts) => {
         },
         setBoard: (num, board) => {
             boards[num] = board
+        },
+        removeBoard: (num) => {
+            boards.splice(num, 1)
+        },
+        debug: () => {
+            console.log(boards)
         }
     }
     return Object.assign(state)
@@ -140,7 +146,7 @@ const CreateSpriteSheet = (opts) => {
                 v1 = v0 + (frame.h / tex.height)
             state.renderer.img(
                 tex,
-                0,0,                // defines "anchor" point of sprite
+                0,0,                // initial rendering location before translation
                 frame.w, 
                 frame.h,
                 0,                  // rotation
@@ -215,18 +221,21 @@ const CreateMainTitle = (game, title, subtitle, callback) => {
         scrollXDirection: false,    // false - left, true - right
         rotationDir: true,         // true - CW, true - false        
         step: (dt) => {
-            if (card.y >= (game.maxY - card.tex.height/4))   card.scrollYDirection = false
-            if (card.y <= 0 + card.tex.height/4)           card.scrollYDirection = true
-            if (card.x >= game.maxX - card.tex.width/4)   card.scrollXDirection = false
-            if (card.x <= 0 + card.tex.width/4)           card.scrollXDirection = true
-            
-            if (card.rot > Math.PI/8)
+            if (card.y >= (game.maxY - card.tex.height/4))   
+                card.scrollYDirection = false
+            if (card.y <= 0 + card.tex.height/4)           
+                card.scrollYDirection = true
+            if (card.x >= game.maxX - card.tex.width/4)   
+                card.scrollXDirection = false
+            if (card.x <= 0 + card.tex.width/4)           
+                card.scrollXDirection = true
+            if (card.rot > Math.PI/14)
                 state.rotationDir = false
-            if (card.rot < -Math.PI/8)
+            if (card.rot < -Math.PI/14)
                 state.rotationDir = true
             card.rot += state.rotationDir ? .009 : -.01
 
-            let dY = card.scrollYDirection ? 6: -4
+            let dY = card.scrollYDirection ? 6 : -4
             let dX = card.scrollXDirection ? 7 : -8 
             card.y += dY/2
             card.x += dX/2
