@@ -222,21 +222,21 @@ const CreateMainTitle = (game, title, subtitle, callback) => {
         rotationDir: true,         // true - CW, true - false        
         step: (dt) => {
             if (card.y >= (game.maxY - card.tex.height/4))   
-                card.scrollYDirection = false
+                state.scrollYDirection = false
             if (card.y <= 0 + card.tex.height/4)           
-                card.scrollYDirection = true
+                state.scrollYDirection = true
             if (card.x >= game.maxX - card.tex.width/4)   
-                card.scrollXDirection = false
+                state.scrollXDirection = false
             if (card.x <= 0 + card.tex.width/4)           
-                card.scrollXDirection = true
+                state.scrollXDirection = true
             if (card.rot > Math.PI/14)
                 state.rotationDir = false
             if (card.rot < -Math.PI/14)
                 state.rotationDir = true
             card.rot += state.rotationDir ? .009 : -.01
 
-            let dY = card.scrollYDirection ? 6 : -4
-            let dX = card.scrollXDirection ? 7 : -8 
+            let dY = state.scrollYDirection ? 6 : -4
+            let dX = state.scrollXDirection ? 7 : -8 
             card.y += dY/2
             card.x += dX/2
 
@@ -324,24 +324,26 @@ const CreateGameBoard = () => {
     return Object.assign(state)
 }
 
-const CreateSprite = (spritesheet) => {
-    let state = {
-        setup: (sprite, props) => {
-            state.sprite = sprite
-            state.merge(props)
-            state.frame = state.frame || 0
-            state.w = spritesheet.map[sprite].w
-            state.h = spritesheet.map[sprite].h
-        },
-        merge: (props) => {
-            if (!props) 
-                return
-            Object.assign(state, props)
-        },
-        draw: (ctx) => {
-            spritesheet.draw(state.sprite, state.x, state.y, null)
-        },
-        step: () => {}
-    }
-    return Object.assign(state)
+// the reason the Sprite constructor is blank
+// is cykod is using Sprite.init as the constructor
+// that way, subclasses of Sprite can use .init
+// this was done since at the time javascript didn't
+// have a super() implementation
+const Sprite = function(){}
+
+Sprite.prototype.init = function(spriteSheet, sprite, props) {
+    this.spriteSheet = spriteSheet
+    this.sprite = sprite || ""
+    this.w = spriteSheet.map[sprite].w;
+    this.h = spriteSheet.map[sprite].h;
+    props = props || {}
+    Object.assign(this, props)
+    // this.frame = props.frame || 0
 }
+Sprite.prototype.draw = function() {
+    this.spriteSheet.draw(this.sprite, this.x, this.y, null)
+}
+Sprite.prototype.hit = function(damage) {
+    this.board.remove(this)
+}
+

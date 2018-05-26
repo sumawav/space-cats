@@ -6,8 +6,7 @@ Based on the [Alien Invasion](https://github.com/cykod/AlienInvasion) example pr
 
 ## Major differences
 * Uses WebGL to draw objects onto the canvas. Utilizing [bitnenfer's](https://github.com/bitnenfer) slick [tiny-canvas](https://github.com/bitnenfer/tiny-canvas) library.
-* Uses ES6 features
-* Eschews prototypical inheritance in favor of a composition based approach.
+
 
 ## Planned Features
 * Different weapons
