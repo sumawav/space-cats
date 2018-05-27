@@ -137,13 +137,16 @@ const CreateSpriteSheet = (opts) => {
             }
             image.src = "img/cats.png"
         },
-        draw: (sprite, x, y, frameNumber) => {
-            let frame = state.map[sprite],
+        draw: (sprite, x, y, frameNumber, tint) => {
+            const frame = state.map[sprite],
                 tex = state.texture
                 u0 = frame.sx / tex.width,
                 v0 = frame.sy / tex.height,
                 u1 = u0 + (frame.w / tex.width),
                 v1 = v0 + (frame.h / tex.height)
+            const colCache = state.renderer.col
+            if (tint)
+                state.renderer.col = tint
             state.renderer.img(
                 tex,
                 0,0,                // initial rendering location before translation
@@ -157,6 +160,7 @@ const CreateSpriteSheet = (opts) => {
                 u1,                 // to [0-1]
                 v1                  // I hope that makes sense
             )
+            state.renderer.col = colCache
         }
     }
     return Object.assign(state)
@@ -212,23 +216,21 @@ const CreateGameBoard = () => {
             state.iterate("draw", ctx)
         },
         overlap: (o1, o2) => {
-            let overlap = !(
+            return !(
                 (o1.y+o1.h-1<o2.y) || 
                 (o1.y>o2.y+o2.h-1) ||
                 (o1.x+o1.w-1<o2.x) || 
                 (o1.x>o2.x+o2.w-1)
             )
-            if (overlap) debugger
-            return overlap
         },
         collide: (obj, type) => {
-            return state.detect(() => {
-                if(obj != this) {
-                    var col = (!type || this.type & type) && board.overlap(obj,this)
-                    return col ? this : false
+            return state.detect((e) => {
+                if (obj != e){
+                    let col = (!type || e.type & type) && state.overlap(obj, e)
+                    return col ? e : false
                 }
             })
-        }
+        },
 
     }
     return Object.assign(state)

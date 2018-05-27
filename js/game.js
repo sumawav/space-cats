@@ -40,14 +40,16 @@ const startGame = () => {
 const playGame = () => {
     // let board = CreateGameBoard()
     gameBoard = CreateGameBoard()
-    let cat = CreateCat(game, spriteSheet, "orange_cat")
+    let cat = CreateCat(game, spriteSheet, "orange_cat", {
+        tint: "0xFF0000FF"
+    })
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
 
     // add some enemies for testing
-    let test_baddies = Array(5).fill().forEach((e,i) => {
+    let test_baddies = ["purple_cat", "orange_cat", "cat", "black_cat", "purple_cat"].forEach((e,i) => {
         gameBoard.add(CreateEnemy(game, spriteSheet, {
-            x: 20+100*i, y: 10+100*i, enemyType: "purple_cat"
+            x: 20+100*i, y: 10+100*i, enemyType: e
         }))
     })
 }
