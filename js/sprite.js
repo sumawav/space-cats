@@ -5,8 +5,8 @@ const Sprite = {
     init: function(spriteSheet, sprite, props) {
         this.spriteSheet = spriteSheet
         this.sprite = sprite || ""
-        this.w = spriteSheet.map[sprite].w;
-        this.h = spriteSheet.map[sprite].h;
+        this.w = spriteSheet.map[sprite].w
+        this.h = spriteSheet.map[sprite].h
         props = props || {}
         Object.assign(this, props)
         return this

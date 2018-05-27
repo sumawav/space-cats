@@ -192,8 +192,6 @@ const CreateGameBoard = () => {
                 }
             })
         },
-        // Interestingly, arrow functions don't have the arguments variable
-        // that's why I'm using the classic syntax here
         iterate: function (funcName) {
             var args = Array.prototype.slice.call(arguments, 1)
             state.objects.forEach((e,i) => {
@@ -202,7 +200,7 @@ const CreateGameBoard = () => {
         },
         detect: (func) => {
             return state.objects.find((e) => {
-                return func.call(e)
+                return func(e)
             }) || false
         },
         step: (dt) => {
@@ -213,16 +211,16 @@ const CreateGameBoard = () => {
         draw: (ctx) => {
             state.iterate("draw", ctx)
         },
-        // TODO:
-        // these variable names will likely change
         overlap: (o1, o2) => {
-            return !((o1.y+o1.h-1<o2.y) || 
-                    (o1.y>o2.y+o2.h-1) ||
-                    (o1.x+o1.w-1<o2.x) || 
-                    (o1.x>o2.x+o2.w-1))
+            let overlap = !(
+                (o1.y+o1.h-1<o2.y) || 
+                (o1.y>o2.y+o2.h-1) ||
+                (o1.x+o1.w-1<o2.x) || 
+                (o1.x>o2.x+o2.w-1)
+            )
+            if (overlap) debugger
+            return overlap
         },
-        // TODO: 
-        // this is most likely broken, will deal with later
         collide: (obj, type) => {
             return state.detect(() => {
                 if(obj != this) {

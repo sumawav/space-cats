@@ -1,10 +1,18 @@
+const OBJECT_PLAYER             = 1,
+      OBJECT_PLAYER_PROJECTILE  = 2,
+      OBJECT_ENEMY              = 4,
+      OBJECT_ENEMY_PROJECTILE   = 8,
+      OBJECT_POWERUP            = 16
+
 const SPRITES = {
     cat:        { sx: 0, sy: 0, w: 32, h: 32, frames: 1 },
     orange_cat: { sx: 0, sy: 32, w: 32, h: 32, frames: 1 },
     black_cat:  { sx: 0, sy: 64, w: 32, h: 32, frames: 1 },
     purple_cat: { sx: 0, sy: 96, w: 32, h: 32, frames: 1 },
     cat_missile:{ sx: 8, sy:32 + 8, w: 4, h: 16, frames: 1 },
-};
+}
+
+var gameBoard
 
 const game = CreateGame({
     debug: true
@@ -13,7 +21,7 @@ const game = CreateGame({
 const spriteSheet = CreateSpriteSheet()
 
 const startGame = () => {
-    game.renderer.bkg(0.0, 0.0, 0.0);
+    game.renderer.bkg(0.0, 0.0, 0.0)
     let titleScreenBoard = CreateMainTitle(
         game,
         "SPACE CATS",
@@ -30,10 +38,18 @@ const startGame = () => {
 }
 
 const playGame = () => {
-    let board = CreateGameBoard();
+    // let board = CreateGameBoard()
+    gameBoard = CreateGameBoard()
     let cat = CreateCat(game, spriteSheet, "orange_cat")
-    board.add(cat)
-    game.setBoard(1, board)
+    gameBoard.add(cat)
+    game.setBoard(1, gameBoard)
+
+    // add some enemies for testing
+    let test_baddies = Array(5).fill().forEach((e,i) => {
+        gameBoard.add(CreateEnemy(game, spriteSheet, {
+            x: 20+100*i, y: 10+100*i, enemyType: "purple_cat"
+        }))
+    })
 }
 
 const loadSprites = () => {

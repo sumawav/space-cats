@@ -7,6 +7,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.y = game.maxY / 2
     cat.reloadTime = 1000
     cat.reload = cat.reloadTime / 4
+    cat.type = OBJECT_PLAYER
 
     Object.assign(cat, props || {})
     Object.assign(cat, {
@@ -30,6 +31,7 @@ const CreateCatMissile = (game, spriteSheet, x, y, props) => {
         })
     missile.x = x - missile.w / 2
     missile.y = y - missile.h
+    missile.type = OBJECT_PLAYER_PROJECTILE
     Object.assign(missile, props || {})
     Object.assign(missile, {
         draw: SpriteDraw,
