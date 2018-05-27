@@ -162,93 +162,91 @@ const CreateSpriteSheet = (opts) => {
     return Object.assign(state)
 }
 
-const CreateCard = (game, title, subtitle, callback) => {
-    let c = document.createElement("canvas")
-    c.width = game.maxX
-    c.height = 200
-    const ctx = c.getContext("2d")
-    ctx.fillStyle = "#FFFFFF"
-    ctx.textAlign = "center"
-    ctx.textBaseline = "middle"
-    ctx.font = "normal bold 40px kremlin"
-    ctx.fillText(title, c.width/2, c.height/2)
-    ctx.font = "normal bold 20px kremlin"
-    ctx.fillText(subtitle, c.width/2, (c.height/2) + 40)
-    const cTexture = TCTex(game.gl, c, c.width, c.height)
-    c = null
-    let up = false
-
-    let state = {
-        x: game.maxX / 2,
-        y: game.maxY / 2,
-        tex: cTexture,
-        rot: 0,
-        step: (dt) => {
-            if (!game.keys["space"])
-                up = true
-            if (up && game.keys["space"]) {
-                if (typeof callback === "function")
-                    callback()
-            }
-        },
-        draw: () => {
-            game.renderer.img(
-                state.tex,
-                -state.tex.width/2,
-                -state.tex.height/2,
-                state.tex.width,
-                state.tex.height,
-                state.rot,
-                state.x, //x
-                state.y, //y
-                1,
-                1,
-                0,
-                0,
-                1,
-                1
-            )
-        }
-    }
-    return Object.assign(state)
+const CardDraw = function() {
+    this.game.renderer.img(
+        this.tex,
+        -this.tex.width/2,
+        -this.tex.height/2,
+        this.tex.width,
+        this.tex.height,
+        this.rot,
+        this.x, //x
+        this.y, //y
+        1,1,0,0,1,1
+    )
 }
-
-const CreateMainTitle = (game, title, subtitle, callback) => {
-    let card = CreateCard(game, title, subtitle, callback)
-
-    let state = {
-        scrollYDirection: false,    // false - up, true - down
-        scrollXDirection: false,    // false - left, true - right
-        rotationDir: true,         // true - CW, true - false        
-        step: (dt) => {
-            if (card.y >= (game.maxY - card.tex.height/4))   
-                state.scrollYDirection = false
-            if (card.y <= 0 + card.tex.height/4)           
-                state.scrollYDirection = true
-            if (card.x >= game.maxX - card.tex.width/4)   
-                state.scrollXDirection = false
-            if (card.x <= 0 + card.tex.width/4)           
-                state.scrollXDirection = true
-            if (card.rot > Math.PI/14)
-                state.rotationDir = false
-            if (card.rot < -Math.PI/14)
-                state.rotationDir = true
-            card.rot += state.rotationDir ? .009 : -.01
-
-            let dY = state.scrollYDirection ? 6 : -4
-            let dX = state.scrollXDirection ? 7 : -8 
-            card.y += dY/2
-            card.x += dX/2
-
-            if (!game.keys["space"])
-                up = true
-            if (up && game.keys["space"]) {
-                if (typeof callback === "function")
-                    callback()
-            }
-        }
+const CardStep = function(dt) {
+    if (!this.game.keys["space"])
+        this.up = true
+    if (this.up && this.game.keys["space"]) {
+        if (typeof this.callback === "function")
+            this.callback()
     }
-    return Object.assign(card, state)
+}
+const Card = {
+    init: function(game, title, subtitle, callback) {
+        let c = document.createElement("canvas")
+        c.width = game.maxX
+        c.height = 200
+        const ctx = c.getContext("2d")
+        ctx.fillStyle = "#00FFFF"
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
+        ctx.font = "normal bold 40px kremlin"
+        ctx.fillText(title, c.width/2, c.height/2)
+        ctx.font = "normal bold 20px kremlin"
+        ctx.fillText(subtitle, c.width/2, (c.height/2) + 40)
+        const cTexture = TCTex(game.gl, c, c.width, c.height)
+        // document.body.appendChild(c)
+        c = null
+
+        this.up = false
+        this.game = game
+        this.x = game.maxX / 2
+        this.y = game.maxY / 2
+        this.tex = cTexture
+        this.rot = 0
+        this.callback = callback || null
+        return this
+    }
+}
+const MainTitleStep = function(dt) {
+    if (this.y >= (this.game.maxY - this.tex.height/4))   
+        this.scrollYDirection = false
+    if (this.y <= 0 + this.tex.height/4)           
+        this.scrollYDirection = true
+    if (this.x >= this.game.maxX - this.tex.width/4)   
+        this.scrollXDirection = false
+    if (this.x <= 0 + this.tex.width/4)           
+        this.scrollXDirection = true
+    if (this.rot > Math.PI/14)
+        this.rotationDir = false
+    if (this.rot < -Math.PI/14)
+        this.rotationDir = true
+    this.rot += this.rotationDir ? .009 : -.01
+
+    let dY = this.scrollYDirection ? 6 : -4
+    let dX = this.scrollXDirection ? 7 : -8 
+    this.y += dY/2
+    this.x += dX/2
+
+    if (!this.game.keys["space"])
+        this.up = true
+    if (this.up && this.game.keys["space"]) {
+        if (typeof this.callback === "function")
+            this.callback()
+    }    
+}
+const CreateMainTitle = (game, title, subtitle, callback) => {
+    let card = Object
+        .create(Card)
+        .init(game, title, subtitle, callback)
+
+    Object.assign(card, {
+        draw: CardDraw,
+        step: MainTitleStep,
+    })
+    return card
 }
 
 const CreateGameBoard = () => {
@@ -324,26 +322,21 @@ const CreateGameBoard = () => {
     return Object.assign(state)
 }
 
-// the reason the Sprite constructor is blank
-// is cykod is using Sprite.init as the constructor
-// that way, subclasses of Sprite can use .init
-// this was done since at the time javascript didn't
-// have a super() implementation
-const Sprite = function(){}
 
-Sprite.prototype.init = function(spriteSheet, sprite, props) {
-    this.spriteSheet = spriteSheet
-    this.sprite = sprite || ""
-    this.w = spriteSheet.map[sprite].w;
-    this.h = spriteSheet.map[sprite].h;
-    props = props || {}
-    Object.assign(this, props)
-    // this.frame = props.frame || 0
-}
-Sprite.prototype.draw = function() {
+const SpriteDraw = function() {
     this.spriteSheet.draw(this.sprite, this.x, this.y, null)
 }
-Sprite.prototype.hit = function(damage) {
-    this.board.remove(this)
+const Sprite = {
+    init: function(spriteSheet, sprite, props) {
+        this.spriteSheet = spriteSheet
+        this.sprite = sprite || ""
+        this.w = spriteSheet.map[sprite].w;
+        this.h = spriteSheet.map[sprite].h;
+        props = props || {}
+        Object.assign(this, props)
+        return this
+    }
 }
+
+
 

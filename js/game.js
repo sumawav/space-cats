@@ -32,9 +32,8 @@ const startGame = () => {
 
 const playGame = () => {
     let board = CreateGameBoard();
-    let cat = new Cat(game, spriteSheet, "orange_cat")
+    let cat = CreateCat(game, spriteSheet, "orange_cat")
     board.add(cat)
-    console.log(cat)
     game.setBoard(1, board)
 }
 
@@ -128,15 +127,8 @@ const CreateStarField = (game, opt) => {
     return Object.assign(state)
 }
 
-const Cat = function(game, spriteSheet, catType, props) {
-    this.init(spriteSheet, catType)
-    this.x = game.maxX / 2
-    this.y = game.maxY / 2
-    props = props || {}
-    Object.assign(this, props)
-}
-Cat.prototype = new Sprite()
-Cat.prototype.step = function(dt) {
+const CatStep = function(dt){
+    let game = this.game
     if (game.keys.right) {
         this.x += 3
     }
@@ -150,48 +142,52 @@ Cat.prototype.step = function(dt) {
         this.y += -3
     }
     if (game.keys.space) {
-        let cmL = new CatMissile(
+        let cmL = CreateCatMissile(
             game, spriteSheet, this.x, this.y
         )
-        let cmR = new CatMissile(
+        let cmR = CreateCatMissile(
             game, spriteSheet, this.x+this.w, this.y
         )
+        console.log(cmL)
         this.board.add(cmL)
         this.board.add(cmR)
         game.keys.space = false
     }
 }
-
-const CreateCatMissile = (game, spritesheet, x, y) => {
-    let sprite = CreateSprite(spritesheet)
-
-    sprite.setup("cat_missile", { vy: -7, damage: 10 })
-
-    let state = {
-        x: x - sprite.w/2,
-        y: y - sprite.h,
-        step: (dt) => {
-            sprite.y += sprite.vy
-            if (sprite.y < -sprite.h)
-                sprite.board.remove(sprite)
-        }
-    }
-
-    return Object.assign(sprite, state)
-}
-
-const CatMissile = function(game, spriteSheet, x, y) {
-    this.init(spriteSheet, "cat_missile", {
-        vy: -7,
-        damage: 10
+const CreateCat = (game, spriteSheet, catType, props) => {
+    let cat = Object
+        .create(Sprite)
+        .init(spriteSheet, catType)
+    cat.game = game
+    cat.x = game.maxX / 2
+    cat.y = game.maxY / 2
+    Object.assign(cat, props || {})
+    Object.assign(cat, {
+        draw: SpriteDraw,
+        step: CatStep,
     })
-    this.x = x - this.w / 2
-    this.y = y - this.h
+    return cat
 }
-CatMissile.prototype = new Sprite()
-CatMissile.prototype.step = function(dt) {
+const CatMissileStep = function(dt) {
     this.y += this.vy
-    if (this.y < -this.h){
+    if (this.y < -this.h) {
         this.board.remove(this)
     }
 }
+const CreateCatMissile = (game, spriteSheet, x, y, props) => {
+    let missile = Object
+        .create(Sprite)
+        .init(spriteSheet, "cat_missile", {
+            vy: -7,
+            damage: 10
+        })
+    missile.x = x - missile.w / 2
+    missile.y = y - missile.h
+    Object.assign(missile, props || {})
+    Object.assign(missile, {
+        draw: SpriteDraw,
+        step: CatMissileStep
+    })
+    return missile
+}
+
