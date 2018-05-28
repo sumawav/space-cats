@@ -5,14 +5,29 @@
 // E Constant vertical velocity
 // F Strength of vertical sinusoidal velocity
 // G Period of vertical sinusoidal velocity
-
+// H Time shift of vertical
 const EnemyStep = function(dt){
     this.t += dt
+
     this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D)
     this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H)
   
     this.x += this.vx * dt
     this.y += this.vy * dt
+
+    const collision = this.board.collide(this, OBJECT_PLAYER)
+    if (collision) {
+        collision.hit(this.damage)
+        this.board.remove(this)
+    }
+
+    if (this.y > game.maxY || this.x < -this.w || this.x > game.width) {
+        this.board.remove(this)
+    }
+}
+
+const EnemyHit = function(damage){
+    this.board.remove(this)
 }
 
 const CreateEnemy = function(game, spriteSheet, blueprint, override) {
@@ -25,7 +40,8 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
     }, blueprint, override)
     Object.assign(en, {
         draw: SpriteDraw,
-        step: EnemyStep
+        step: EnemyStep,
+        hit: EnemyHit
     })
     return en
 }

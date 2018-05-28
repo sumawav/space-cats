@@ -39,7 +39,7 @@ const CreateStarField = (game, opt) => {
         speed: options.speed,
         step: (dt) => {
             state.stars.forEach((star, i, a) => {
-                star.z -= state.speed * dt / 1000
+                star.z -= state.speed * dt
                 if (star.z <= 0)
                     star = {
                         x: randomRange(-25,25),

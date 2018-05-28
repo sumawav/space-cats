@@ -22,36 +22,51 @@ const spriteSheet = CreateSpriteSheet()
 
 const startGame = () => {
     game.renderer.bkg(0.0, 0.0, 0.0)
-    let titleScreenBoard = CreateMainTitle(
+    game.setBoard(0, CreateStarField(game, { 
+        centerX: game.maxX/4,
+        centerY: game.maxY/4,
+        speed: 10
+    }))
+    game.setBoard(1, CreateMainTitle(
         game,
         "SPACE CATS",
         "press spacebar",
         playGame
-    )
-    let starField = CreateStarField(game, { 
-        centerX: game.maxX/4,
-        centerY: game.maxY/4,
-        speed: 10 
-    })
-    game.setBoard(0, starField)
-    game.setBoard(1, titleScreenBoard)
+    ))
 }
 
 const playGame = () => {
-    // let board = CreateGameBoard()
     gameBoard = CreateGameBoard()
-    let cat = CreateCat(game, spriteSheet, "orange_cat", {
-        tint: "0xFF0000FF"
-    })
-    gameBoard.add(cat)
+    gameBoard.add(CreateCat(game, spriteSheet, "orange_cat", {
+        tint: "0xFF0000FF",
+        x: (game.maxX / 2) - (SPRITES.orange_cat.w/2),
+        y: game.maxY - SPRITES.orange_cat.h,
+    }))
     game.setBoard(1, gameBoard)
 
+    var enemies = {
+        basic: { x: 100, y: -50, B: 100, C: 2 , E: 100 }
+    };
+
     // add some enemies for testing
-    let test_baddies = ["purple_cat", "orange_cat", "cat", "black_cat", "purple_cat"].forEach((e,i) => {
+    let test_baddies = ["purple_cat", "orange_cat", "cat", "black_cat", "purple_cat"]
+    test_baddies.forEach((e,i) => {
         gameBoard.add(CreateEnemy(game, spriteSheet, {
-            x: 20+100*i, y: 10+100*i, enemyType: e
+            x: 20+100*i, y: -50, enemyType: e,
+            B: 100, C: 2, E: 100,
+            damage: i
         }))
     })
+}
+
+const GameOver = () => {
+    const gameOver = CreateMainTitle(
+        game,
+        "game over",
+        "PRESS SPACE",
+        playGame
+    )
+    game.setBoard(1, gameOver)
 }
 
 const loadSprites = () => {
@@ -59,27 +74,6 @@ const loadSprites = () => {
 }
 
 window.addEventListener("load", () => { 
+    document.getElementById("canvas").focus()
     game.initialize("canvas", loadSprites) 
 })
-
-const CatStep = function(dt){
-    this.reload -= dt
-    const gKeys = this.game.keys
-    if (gKeys.right)   this.x += 3
-    if (gKeys.left)    this.x -= 3
-    if (gKeys.down)    this.y += 3
-    if (gKeys.up)      this.y += -3
-    if (gKeys.space && this.reload < 0) {
-        this.reload = this.reloadTime
-        let cmL = CreateCatMissile(
-            game, spriteSheet, this.x, this.y
-        )
-        let cmR = CreateCatMissile(
-            game, spriteSheet, this.x+this.w, this.y
-        )
-        this.board.add(cmL)
-        this.board.add(cmR)
-        this.game.keys.space = false
-    }
-}
-

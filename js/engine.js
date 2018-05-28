@@ -21,7 +21,7 @@ const CreateGame = (opts) => {
         39:"right", 
         40:"down"
     }
-    const STEP = 1000 / 60
+    const STEP = 1 / 60
     const timestamp = () => {
         return window.performance && 
             window.performance.now ? 
@@ -64,7 +64,7 @@ const CreateGame = (opts) => {
         if (options.debug)
             fpsMeter.tick()
         let now = timestamp()
-        dt += Math.min(1000, (now - last))
+        dt += Math.min(1, (now - last) / 1000)
         while(dt > STEP) {
             dt -= STEP
             update(STEP)
