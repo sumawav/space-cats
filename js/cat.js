@@ -15,7 +15,17 @@ const CatStep = function(dt){
         )
         this.board.add(cmL)
         this.board.add(cmR)
-        this.game.keys.space = false
+        gKeys.space = false
+    }
+    if (gKeys.z && !this.zDown){
+        console.log("Z")
+        this.board.add(CreateExplosion(
+            game, spriteSheet
+        ))
+        this.zDown = true
+    } else if (!gKeys.z && this.zDown){
+        console.log("no Z")
+        this.zDown = false
     }
 }
 

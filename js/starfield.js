@@ -9,15 +9,11 @@ const CreateStarField = (game, opt) => {
     }
     let stars = []
 
-    const randomRange = (minVal,maxVal) => {
-        return Math.floor(Math.random() * (maxVal - minVal - 1)) + minVal;
-    }
-
     for (let i = 0; i < options.count; ++i){
         stars[i] = {
-            x: randomRange(-25,25),
-            y: randomRange(-25,25),
-            z: randomRange(0, options.depth)
+            x: randomRangeInt(-25,25),
+            y: randomRangeInt(-25,25),
+            z: randomRangeInt(0, options.depth)
         }
     }
 
@@ -42,8 +38,8 @@ const CreateStarField = (game, opt) => {
                 star.z -= state.speed * dt
                 if (star.z <= 0)
                     star = {
-                        x: randomRange(-25,25),
-                        y: randomRange(-25,25),
+                        x: randomRangeInt(-25,25),
+                        y: randomRangeInt(-25,25),
                         z: state.depth
                     }
                 let k = state.density / star.z
@@ -58,7 +54,7 @@ const CreateStarField = (game, opt) => {
             state.stars.forEach((star) => {
                 if (star.px >= 0 && star.px <= game.maxX && 
                     star.py >= 0 && star.py <= game.maxY) {
-                    // let shade = parseInt(Math.min((1 - star.z / depth)*1.5,1) * 255);
+                    // let shade = parseInt(Math.min((1 - star.z / state.depth)*1.5,1) * 255);
                     // let shadeStr = shade.toString(16)
                     // game.renderer.col = "0xFF" + shadeStr + shadeStr + shadeStr
                     game.renderer.img(

@@ -19,7 +19,8 @@ const CreateGame = (opts) => {
         37:"left", 
         38:"up", 
         39:"right", 
-        40:"down"
+        40:"down",
+        90:"z"
     }
     const STEP = 1 / 60
     const timestamp = () => {
@@ -44,21 +45,13 @@ const CreateGame = (opts) => {
             }
         }, false)
         state.canvas.onmousedown = function (evt) {
-            console.log("mouse down")
-            console.log("canvas x: " + evt.layerX)
-            console.log("canvas y: " + evt.layerY)
+            // console.log("mouse down")
+            // console.log("canvas x: " + evt.layerX)
+            // console.log("canvas y: " + evt.layerY)
         }
-        state.canvas.onmouseup = function (evt) {
-            console.log("mouse up")
-            // add = false
-        }
-        state.canvas.ontouchstart = function (evt) {
-            // add = true
-            // currentFrame = (currentFrame + 1) % frames.length
-        }
-        state.canvas.ontouchend = function (evt) {
-            // add = false
-        }
+        state.canvas.onmouseup = function (evt) {}
+        state.canvas.ontouchstart = function (evt) {}
+        state.canvas.ontouchend = function (evt) {}
     }
     const loop = () => {
         if (options.debug)
@@ -116,9 +109,8 @@ const CreateGame = (opts) => {
     return Object.assign(state)
 }
 
-const CreateSpriteSheet = (opts) => {
-    let options = opts || {},
-        state = { map: {} }
+const CreateSpriteSheet = () => {
+    let state = { map: {} }
 
     state = {
         load: (spriteData, renderer, callback) => {
@@ -137,9 +129,11 @@ const CreateSpriteSheet = (opts) => {
             }
             image.src = "img/cats.png"
         },
-        draw: (sprite, x, y, frameNumber, tint) => {
+        draw: (sprite, x, y, scale, tint) => {
+            scale = scale || 1
+            tint = tint || false
             const frame = state.map[sprite],
-                tex = state.texture
+                tex = state.texture,
                 u0 = frame.sx / tex.width,
                 v0 = frame.sy / tex.height,
                 u1 = u0 + (frame.w / tex.width),
@@ -154,7 +148,7 @@ const CreateSpriteSheet = (opts) => {
                 frame.h,
                 0,                  // rotation
                 x, y,               // translation
-                1,1,                // scale (x, y)
+                scale,scale,        // scale (x, y)
                 u0,                 // These values are x, y, w, h
                 v0,                 // for the texture normalized
                 u1,                 // to [0-1]
@@ -165,7 +159,6 @@ const CreateSpriteSheet = (opts) => {
     }
     return Object.assign(state)
 }
-
 
 const CreateGameBoard = () => {
     let state = {
