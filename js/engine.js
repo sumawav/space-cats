@@ -20,9 +20,11 @@ const CreateGame = (opts) => {
         38:"up", 
         39:"right", 
         40:"down",
-        90:"z"
+        90:"z",
+        88:"x",
     }
     const STEP = 1 / 60
+    const slowMoFactor = 1
     const timestamp = () => {
         return window.performance && 
             window.performance.now ? 
@@ -60,7 +62,7 @@ const CreateGame = (opts) => {
         dt += Math.min(1, (now - last) / 1000)
         while(dt > STEP) {
             dt -= STEP
-            update(STEP)
+            update(STEP / state.sloMoFactor)
         }
         draw()
         last = now
@@ -79,6 +81,7 @@ const CreateGame = (opts) => {
         state.renderer.flush()
     }
     state = {
+        sloMoFactor: 1,
         initialize: (canvasElementId, callback) => {
             state.renderer = TS(document.getElementById(canvasElementId))
             state.canvas = state.renderer.c
@@ -129,7 +132,7 @@ const CreateSpriteSheet = () => {
             }
             image.src = "img/cats.png"
         },
-        draw: (sprite, x, y, scale, tint) => {
+        draw: (sprite, x, y, scale, tint, center) => {
             scale = scale || 1
             tint = tint || false
             const frame = state.map[sprite],
@@ -139,11 +142,18 @@ const CreateSpriteSheet = () => {
                 u1 = u0 + (frame.w / tex.width),
                 v1 = v0 + (frame.h / tex.height)
             const colCache = state.renderer.col
+            let centerX = 0
+            let centerY = 0
+            if (center) {
+                centerX = -frame.w/2
+                centerY = -frame.h/2
+            }
             if (tint)
                 state.renderer.col = tint
             state.renderer.img(
                 tex,
-                0,0,                // initial rendering location before translation
+                centerX,       // initial rendering 
+                centerY,       // location before translation
                 frame.w, 
                 frame.h,
                 0,                  // rotation

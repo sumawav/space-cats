@@ -5,7 +5,7 @@ const CatStep = function(dt){
     if (gKeys.left)    this.x -= 3
     if (gKeys.down)    this.y += 3
     if (gKeys.up)      this.y += -3
-    if (gKeys.space && this.reload < 0) {
+    if (gKeys.z && this.reload < 0) {
         this.reload = this.reloadTime
         let cmL = CreateCatMissile(
             game, spriteSheet, this.x, this.y
@@ -15,17 +15,24 @@ const CatStep = function(dt){
         )
         this.board.add(cmL)
         this.board.add(cmR)
-        gKeys.space = false
+        gKeys.z = false
     }
-    if (gKeys.z && !this.zDown){
-        console.log("Z")
+    if (gKeys.q && !this.qDown){
         this.board.add(CreateExplosion(
-            game, spriteSheet
+            game, spriteSheet, this.x, this.y
         ))
-        this.zDown = true
-    } else if (!gKeys.z && this.zDown){
-        console.log("no Z")
-        this.zDown = false
+        this.qDown = true
+    } else if (!gKeys.q && this.qDown){
+        this.qDown = false
+    }
+    if (gKeys.space && !this.spaceDown){
+        console.log("slomo")
+        game.sloMoFactor = 5
+        this.spaceDown = true
+    } else if (!gKeys.space && this.spaceDown){
+        console.log("normalspeed")
+        game.sloMoFactor = 1
+        this.spaceDown = false
     }
 }
 
@@ -42,6 +49,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.x = game.maxX / 2
     cat.y = game.maxY / 2
     cat.reloadTime = 0.25
+    cat.spaceDown = true
     cat.reload = cat.reloadTime
     cat.type = OBJECT_PLAYER
 

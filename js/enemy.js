@@ -28,6 +28,9 @@ const EnemyStep = function(dt){
 
 const EnemyHit = function(damage){
     this.board.remove(this)
+    this.board.add(CreateExplosion(
+        game, spriteSheet, this.x + this.w/2, this.y + this.h/2
+    ))
 }
 
 const CreateEnemy = function(game, spriteSheet, blueprint, override) {

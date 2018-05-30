@@ -1,5 +1,7 @@
 const SpriteDraw = function() {
-    this.spriteSheet.draw(this.sprite, this.x, this.y, this.scale, this.tint)
+    this.spriteSheet.draw(
+        this.sprite, this.x, this.y, this.scale, this.tint, this.center
+    )
 }
 const Sprite = {
     init: function(spriteSheet, sprite, props) {
