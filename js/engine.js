@@ -22,6 +22,7 @@ const CreateGame = (opts) => {
         40:"down",
         90:"z",
         88:"x",
+        81: "q",
     }
     const STEP = 1 / 60
     const slowMoFactor = 1
