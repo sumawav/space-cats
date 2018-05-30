@@ -1,10 +1,20 @@
 const CatStep = function(dt){
     this.reload -= dt
     const gKeys = this.game.keys
-    if (gKeys.right)   this.x += 3
-    if (gKeys.left)    this.x -= 3
-    if (gKeys.down)    this.y += 3
-    if (gKeys.up)      this.y += -3
+    if (gKeys.right)
+        this.vx = this.maxVel
+    else if (gKeys.left)    
+        this.vx = -this.maxVel
+    else 
+        this.vx = 0
+
+    if (gKeys.down)    
+        this.vy = this.maxVel
+    else if (gKeys.up) 
+        this.vy = -this.maxVel 
+    else 
+        this.vy = 0
+
     if (gKeys.z && this.reload < 0) {
         this.reload = this.reloadTime
         let cmL = CreateCatMissile(
@@ -34,6 +44,10 @@ const CatStep = function(dt){
         this.game.sloMoFactor = 1
         this.spaceDown = false
     }
+
+    this.x += this.vx * dt
+    this.y += this.vy * dt
+
 }
 
 const CatHit = function(damage){

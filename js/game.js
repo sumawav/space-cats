@@ -13,6 +13,10 @@ const SPRITES = {
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
 
+const enemies = {
+    basic: { x: 100, y: -50, B: 100, C: 2 , E: 100 }
+};
+
 var gameBoard
 const game = CreateGame({debug: true})
 const spriteSheet = CreateSpriteSheet()
@@ -26,8 +30,8 @@ const startGame = () => {
     }))
     game.setBoard(1, CreateMainTitle(
         game,
-        "SPACE CATS",
-        "press z to play",
+        "space cats",
+        "PRESS Z TO PLAY",
         playGame
     ))
 }
@@ -38,12 +42,10 @@ const playGame = () => {
         tint: "0xFF0000FF",
         x: (game.maxX / 2) - (SPRITES.orange_cat.w/2),
         y: game.maxY - SPRITES.orange_cat.h,
+        maxVel: 200
     }))
     game.setBoard(1, gameBoard)
 
-    var enemies = {
-        basic: { x: 100, y: -50, B: 100, C: 2 , E: 100 }
-    };
     game.removeBoard(2)
     // add some enemies for testing
     let test_baddies = ["purple_cat", "orange_cat", "cat", "black_cat", "purple_cat"]
@@ -60,7 +62,7 @@ const GameOver = () => {
     const gameOver = CreateMainTitle(
         game,
         "game over",
-        "PRESS SPACE",
+        "PRESS Z TO PLAY",
         playGame
     )
     game.setBoard(2, gameOver)
