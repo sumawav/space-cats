@@ -31,15 +31,19 @@ const CatStep = function(dt){
         this.spaceDown = true
     } else if (!gKeys.space && this.spaceDown){
         console.log("normalspeed")
-        game.sloMoFactor = 1
+        this.game.sloMoFactor = 1
         this.spaceDown = false
     }
 }
 
 const CatHit = function(damage){
     this.board.remove(this)
+    this.game.sloMoFactor = 6
     this.board.add(CreateExplosion(
-        game, spriteSheet, this.x + this.w/2, this.y + this.h/2
+        game, spriteSheet, this.x + this.w/2, this.y + this.h/2,
+        {
+            callback: ()=> this.game.sloMoFactor = 1
+        }
     ))
     GameOver()
 }

@@ -7,25 +7,31 @@ const ExpStep = function(dt) {
         } else {
             layer.done = true
         }
-        layer.pairs.map((e) => {
-            e.t += dt * layer.spread
-            e.x = this.centerX + e.t * e.cosTheta
-            e.y = this.centerY + e.t * e.sinTheta
-        })
+        if (!layer.done){
+            layer.pairs.map((e) => {
+                e.t += dt * layer.spread
+                e.x = this.centerX + e.t * e.cosTheta
+                e.y = this.centerY + e.t * e.sinTheta
+            })
+        }
     })
     if (this.layers[0].done && this.layers[1].done && this.layers[2].done){
         this.board.remove(this)
+        if (typeof this.callback === "function")
+            this.callback()
     }
 }
 
 const ExpDraw = function() {
-    this.layers.map((layer) => {
-        layer.pairs.forEach((e) => {
-            this.spriteSheet.draw(
-                this.sprite, e.x, e.y, 
-                layer.scale, layer.tint, true
-            )
-        })
+    this.layers.forEach((layer) => {
+        if (!layer.done){
+            layer.pairs.forEach((e) => {
+                this.spriteSheet.draw(
+                    this.sprite, e.x, e.y, 
+                    layer.scale, layer.tint, true
+                )
+            })
+        }
     })
 
 }
