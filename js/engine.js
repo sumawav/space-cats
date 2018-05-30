@@ -104,7 +104,8 @@ const CreateGame = (opts) => {
             boards[num] = board
         },
         removeBoard: (num) => {
-            boards.splice(num, 1)
+            if (boards[num])
+                boards.splice(num, 1)
         },
         debug: () => {
             console.log(boards)

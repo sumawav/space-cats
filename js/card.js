@@ -12,9 +12,9 @@ const CardDraw = function() {
     )
 }
 const CardStep = function(dt) {
-    if (!this.game.keys["space"])
+    if (!this.game.keys["z"])
         this.up = true
-    if (this.up && this.game.keys["space"]) {
+    if (this.up && this.game.keys["z"]) {
         if (typeof this.callback === "function")
             this.callback()
     }
@@ -66,9 +66,9 @@ const MainTitleStep = function(dt) {
     this.y += dY/2
     this.x += dX/2
 
-    if (!this.game.keys["space"])
+    if (!this.game.keys["z"])
         this.up = true
-    if (this.up && this.game.keys["space"]) {
+    if (this.up && this.game.keys["z"]) {
         if (typeof this.callback === "function")
             this.callback()
     }    

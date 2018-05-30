@@ -27,7 +27,7 @@ const startGame = () => {
     game.setBoard(1, CreateMainTitle(
         game,
         "SPACE CATS",
-        "press spacebar",
+        "press z to play",
         playGame
     ))
 }
@@ -44,7 +44,7 @@ const playGame = () => {
     var enemies = {
         basic: { x: 100, y: -50, B: 100, C: 2 , E: 100 }
     };
-
+    game.removeBoard(2)
     // add some enemies for testing
     let test_baddies = ["purple_cat", "orange_cat", "cat", "black_cat", "purple_cat"]
     test_baddies.forEach((e,i) => {
@@ -63,7 +63,7 @@ const GameOver = () => {
         "PRESS SPACE",
         playGame
     )
-    game.setBoard(1, gameOver)
+    game.setBoard(2, gameOver)
 }
 
 const loadSprites = () => {
