@@ -45,7 +45,7 @@ const CreateStarField = (game, opt) => {
                 let k = state.density / star.z
                 star.px = k * star.x + state.centerX 
                 star.py = k * star.y + state.centerY
-                star.size = (1 - star.z / state.depth) * 2
+                star.size = (1 - star.z / state.depth) * 2.5
                 a[i] = star
             })
         },

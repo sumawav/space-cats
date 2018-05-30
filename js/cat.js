@@ -14,8 +14,9 @@ const CatStep = function(dt){
         this.vy = -this.maxVel 
     else 
         this.vy = 0
-
-    if (gKeys.z && this.reload < 0) {
+    // shoot
+    if (gKeys.z && !this.zDown && this.reload < 0) {
+        console.log("Z DOWN")
         this.reload = this.reloadTime
         let cmL = CreateCatMissile(
             game, spriteSheet, this.x, this.y
@@ -25,8 +26,13 @@ const CatStep = function(dt){
         )
         this.board.add(cmL)
         this.board.add(cmR)
-        gKeys.z = false
+
+        this.zDown = true
+    } else if (!gKeys.z && this.zDown){
+        console.log("Z UP")
+        this.zDown = false
     }
+    // text explosion
     if (gKeys.q && !this.qDown){
         this.board.add(CreateExplosion(
             game, spriteSheet, this.x, this.y
@@ -35,6 +41,7 @@ const CatStep = function(dt){
     } else if (!gKeys.q && this.qDown){
         this.qDown = false
     }
+    // slow motion
     if (gKeys.space && !this.spaceDown){
         console.log("slomo")
         game.sloMoFactor = 5

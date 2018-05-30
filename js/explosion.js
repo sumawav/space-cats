@@ -1,6 +1,5 @@
 const ExpStep = function(dt) {
     this.t += dt
-
     this.layers.forEach((layer) => {
         if (layer.scale > 0){
             layer.scale -= dt * layer.spread
@@ -44,10 +43,6 @@ const CreateExplosion = (game, spriteSheet, x, y, props) => {
     exp.centerX = x
     exp.centerY = y
 
-    // create array of random angles [0, 2*PI]
-    // var theti = Array(randomRangeInt(10,15)).fill().map(() => {
-    //     return randomRangeInt(0, 2*Math.PI*1000) / 1000
-    // })
     const createThetas = (min, max) => {
         return Array(randomRangeInt(min,max)).fill().map(() => {
             return randomRangeInt(0, 2*Math.PI*1000) / 1000

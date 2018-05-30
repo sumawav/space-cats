@@ -34,9 +34,10 @@ const EnemyHit = function(damage){
 }
 
 const CreateEnemy = function(game, spriteSheet, blueprint, override) {
+    override = override || {}
     let en = Object
         .create(Sprite)
-        .init(spriteSheet, blueprint.enemyType)   
+        .init(spriteSheet, override.enemyType || blueprint.enemyType)   
     Object.assign(en, {
         A:0,B:0,C:0,D:0,E:0,F:0,G:0,H:0,t:0, // defaults
         type: OBJECT_ENEMY
