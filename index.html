@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
-    <title>tiny-sprite kittenmark</title>
+    <meta charset="UTF-8"/>
+    <title>SPACE CATS</title>
+    <link rel="stylesheet" href="css/base.css" type="text/css" />
     <meta name="viewport" content="width=device-width, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
     <script type="text/javascript" src="js/fpsmeter.js"></script>
     <style type="text/css">
@@ -10,34 +12,14 @@
             src: url('kremlin.ttf');
             font-weight: bold;
         }
-        body {
-            /* font-family: Verdana, Arial; */
-            font-family: kremlin;
-            font-size: 10px;
-        }
-        canvas{
-            border: 0;
-            padding: 0;
-            margin: auto;
-            display: block;
-            outline: none;
-              
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-           -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
-          
-        }
     </style>
 </head>
 <body>
     <div id="container">
-        <canvas id='canvas' width="512" height="640"></canvas>
+        <!-- <canvas id='canvas' width="512" height="640"></canvas> -->
+        <canvas id='canvas' width="320" height="480"></canvas>
     </div>
-<div style="font-family: kremlin;">&nbsp;</div>
+<div style="font-family: kremlin; height:0px; width:0px;">&nbsp;</div>
 <script type="text/javascript" src="js/tiny-sprite.js"></script>
 <script type="text/javascript" src='js/utils.js'></script>
 <script type="text/javascript" src='js/engine.js'></script>

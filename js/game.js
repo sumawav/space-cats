@@ -20,19 +20,19 @@ const enemies = {
     },
     ltr: { 
         x: 0, y: -100, enemyType: "purple_cat", health: 10, 
-        B: 200, C: 1, E: 200 
+        B: 75, C: 1, E: 100 
     },
     circle: { 
-        x: 400, y: -50, enemyType: "black_cat", health: 10, 
-        A: 0, B: -200, C: 1, E: 20, F: 200, G: 1, H: Math.PI/2 
+        x: 250, y: -50, enemyType: "black_cat", health: 10, 
+        A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2 
     },
     wiggle: { 
-        x: 100, y: -50, enemyType: "cat", health: 10, 
-        B: 100, C: 4, E: 100 
+        x: 100, y: -50, enemyType: "cat", health: 20, 
+        B: 50, C: 4, E: 100 
     },
     step: { 
         x: 0, y: -50, enemyType: "cat", health: 10, 
-        B: 300, C: 1.5, E: 60 
+        B: 150, C: 1.2, E: 75
     },
 };
 

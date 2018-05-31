@@ -85,22 +85,23 @@ const CreateGame = (opts) => {
         gameOver: false,
         sloMoFactor: 1,
         initialize: (canvasElementId, callback) => {
-            state.renderer = TS(document.getElementById(canvasElementId))
-            state.canvas = state.renderer.c
-            state.gl = state.renderer.g
-            state.gravity = 0.5
-            state.maxX = state.renderer.c.width
-            state.minX = 0
-            state.maxY = state.renderer.c.height
-            state.minY = 0
-            state.cellSize = 32
+            state.canvas = document.getElementById(canvasElementId);
 
             state.playerOffset = 10
             state.canvasMultiplier = 1
             state.setupMobile()
 
+            state.maxX = state.canvas.width
+            state.minX = 0
+            state.maxY = state.canvas.height
+            state.minY = 0
+
             state.width = state.canvas.width
             state.height = state.canvas.height
+
+            state.renderer = TS(state.canvas)
+            state.gl = state.renderer.g
+
             setupInput()
             last = timestamp()
             loop()
@@ -156,7 +157,6 @@ const CreateGame = (opts) => {
             state.canvas.style.position = 'absolute'
             state.canvas.style.left = "0px"
             state.canvas.style.top = "0px"
-            
         }
     }
     return Object.assign(state)
@@ -342,7 +342,7 @@ const CreateLevel = (game, spriteSheet, levelData, callback) => {
 const CreateTouchControls = (game, spriteSheet) => {
 
     const gutterWidth = 10;
-    const unitWidth = game.width / 5;
+    const unitWidth = game.maxX / 5;
     const blockWidth = unitWidth - gutterWidth;
 
     let tC = {
