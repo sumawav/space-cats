@@ -16,7 +16,7 @@ const CatStep = function(dt){
         this.vy = 0
     // shoot
     if (gKeys.z && !this.zDown && this.reload < 0) {
-        console.log("Z DOWN")
+        // console.log("Z DOWN")
         this.reload = this.reloadTime
         let cmL = CreateCatMissile(
             game, spriteSheet, this.x, this.y
@@ -29,7 +29,7 @@ const CatStep = function(dt){
 
         this.zDown = true
     } else if (!gKeys.z && this.zDown){
-        console.log("Z UP")
+        // console.log("Z UP")
         this.zDown = false
     }
     // text explosion
