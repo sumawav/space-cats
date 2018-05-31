@@ -381,6 +381,7 @@ const CreateTouchControls = (game, spriteSheet) => {
             e.preventDefault()
             game.keys['left'] = false
             game.keys['right'] = false
+            game.keys['space'] = false
             for (var i = 0; i < e.targetTouches.length; i++) {
                 touch = e.targetTouches[i]
                 x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
@@ -389,6 +390,9 @@ const CreateTouchControls = (game, spriteSheet) => {
                 }
                 if (x > unitWidth && x < 2 * unitWidth) {
                     game.keys['right'] = true
+                }
+                if (x > 3*unitWidth && x < 4 * unitWidth) {
+                    game.keys['space'] = true
                 }
             }
     
