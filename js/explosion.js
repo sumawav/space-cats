@@ -27,7 +27,8 @@ const ExpDraw = function() {
             layer.pairs.forEach((e) => {
                 this.spriteSheet.draw(
                     this.sprite, e.x, e.y, 
-                    layer.scale, layer.tint, true
+                    layer.scale, layer.tint, 
+                    true // draw squares centered
                 )
             })
         }
