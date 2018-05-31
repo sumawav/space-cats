@@ -71,13 +71,13 @@ const CreateGame = (opts) => {
     }
     const update = (step) => { 
         boards.forEach((b) => {
-            b.step(step)
+            if(b){ b.step(step) }
         })
     }
     const draw = () => { 
         state.renderer.cls()
         boards.forEach((b) => {
-            b.draw(state.gl)
+            if (b) { b.draw(state.gl) }
         })
         state.renderer.flush()
     }
@@ -124,25 +124,29 @@ const CreateGame = (opts) => {
                   hasTouch = !!('ontouchstart' in window)
             let w = window.innerWidth
             let h = window.innerHeight
-
+            // check if touch available
             if (hasTouch) { state.mobile = true; }
-
+            // if not, or screen too big -> not mobile
             if (screen.width >= 1280 || !hasTouch) { return false; }
-            
+            // if screen is landscape, ask to rotate
             if (w > h) {
                 alert("Please rotate the device and then click OK")
                 w = window.innerWidth
                 h = window.innerHeight
             }
-            
+            // set container to double height
+            // (not totally sure why)
             container.style.height = h * 2 + "px"
+            // scroll window to left and top minus 1 pixel
             window.scrollTo(0, 1)
-
+            // set container to window height
             h = window.innerHeight + 2
             container.style.height = h + "px"
             container.style.width = w + "px"
             container.style.padding = 0
 
+            // in case window.innerHeight is quite big
+            // halve the resolution
             if (h >= state.canvas.height * 1.75 || w >= state.canvas.height * 1.75) {
                 state.canvasMultiplier = 2
                 state.canvas.width = w / 2
@@ -153,7 +157,7 @@ const CreateGame = (opts) => {
                 state.canvas.width = w
                 state.canvas.height = h
             }
-
+            // set canvas to absolute positioning
             state.canvas.style.position = 'absolute'
             state.canvas.style.left = "0px"
             state.canvas.style.top = "0px"
@@ -341,36 +345,21 @@ const CreateLevel = (game, spriteSheet, levelData, callback) => {
 
 const CreateTouchControls = (game, spriteSheet) => {
 
-    const gutterWidth = 10;
-    const unitWidth = game.maxX / 5;
-    const blockWidth = unitWidth - gutterWidth;
+    const gutterWidth = 10
+    const unitWidth = game.maxX / 5
+    const blockWidth = unitWidth - gutterWidth
 
     let tC = {
         init: () => {
-            game.canvas.addEventListener('touchstart', tC.trackTouch, true);
-            game.canvas.addEventListener('touchmove', tC.trackTouch, true);
-            game.canvas.addEventListener('touchend', tC.trackTouch, true);
+            game.canvas.addEventListener('touchstart', tC.trackTouch, true)
+            game.canvas.addEventListener('touchmove', tC.trackTouch, true)
+            game.canvas.addEventListener('touchend', tC.trackTouch, true)
         
             // For Android
-            game.canvas.addEventListener('dblclick', (e) => { e.preventDefault(); }, true);
-            game.canvas.addEventListener('click', (e) => { e.preventDefault(); }, true);
+            game.canvas.addEventListener('dblclick', (e) => { e.preventDefault() }, true)
+            game.canvas.addEventListener('click', (e) => { e.preventDefault() }, true)
         
-            game.playerOffset = unitWidth + 20;
-        },
-        drawSquare: (ctx, x, y, txt, on) => {
-            ctx.globalAlpha = on ? 0.9 : 0.6;
-            ctx.fillStyle = "#CCC";
-            ctx.fillRect(x, y, blockWidth, blockWidth);
-    
-            ctx.fillStyle = "#FFF";
-            ctx.globalAlpha = 1.0;
-            ctx.font = "bold " + (3 * unitWidth / 4) + "px arial";
-    
-            var txtSize = ctx.measureText(txt);
-    
-            ctx.fillText(txt,
-                x + blockWidth / 2 - txtSize.width / 2,
-                y + 3 * blockWidth / 4 + 5);
+            game.playerOffset = unitWidth + 20
         },
         drawSquare2: (x, y, on) => {
             const tint = on ? "0xAAFFFFFF" : "0x33FFFFFF"
@@ -379,35 +368,36 @@ const CreateTouchControls = (game, spriteSheet) => {
             )
         },
         draw: (ctx) => {    
-            var yLoc = game.height - unitWidth;
-            tC.drawSquare2(gutterWidth, yLoc, game.keys['left']);
-            tC.drawSquare2(unitWidth + gutterWidth, yLoc, game.keys['right']);
-            tC.drawSquare2(4 * unitWidth, yLoc, game.keys['z']);
+            var yLoc = game.height - unitWidth
+            tC.drawSquare2(gutterWidth, yLoc, game.keys['left'])
+            tC.drawSquare2(unitWidth + gutterWidth, yLoc, game.keys['right'])
+            tC.drawSquare2(3 * unitWidth, yLoc, game.keys["space"])
+            tC.drawSquare2(4 * unitWidth, yLoc, game.keys['z'])
         },
         step: (dt) => {},
         trackTouch: (e) => {
-            var touch, x;
+            var touch, x
     
-            e.preventDefault();
-            game.keys['left'] = false;
-            game.keys['right'] = false;
+            e.preventDefault()
+            game.keys['left'] = false
+            game.keys['right'] = false
             for (var i = 0; i < e.targetTouches.length; i++) {
-                touch = e.targetTouches[i];
-                x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft;
+                touch = e.targetTouches[i]
+                x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
                 if (x < unitWidth) {
-                    game.keys['left'] = true;
+                    game.keys['left'] = true
                 }
                 if (x > unitWidth && x < 2 * unitWidth) {
-                    game.keys['right'] = true;
+                    game.keys['right'] = true
                 }
             }
     
             if (e.type == 'touchstart' || e.type == 'touchend') {
                 for (i = 0; i < e.changedTouches.length; i++) {
-                    touch = e.changedTouches[i];
-                    x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft;
+                    touch = e.changedTouches[i]
+                    x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
                     if (x > 4 * unitWidth) {
-                        game.keys['z'] = (e.type == 'touchstart');
+                        game.keys['z'] = (e.type == 'touchstart')
                     }
                 }
             }

@@ -12,7 +12,14 @@ const SPRITES = {
     cat_missile:{ sx: 8, sy:32 + 8, w: 2, h:16, frames: 1 },
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
-
+// A Constant horizontal velocity
+// B Strength of horizontal sinusoidal velocity
+// C Period of horizontal sinusoidal velocity
+// D Time shift of horizontal sinusoidal velocity
+// E Constant vertical velocity
+// F Strength of vertical sinusoidal velocity
+// G Period of vertical sinusoidal velocity
+// H Time shift of vertical
 const enemies = {
     straight: { 
         x: 0, y: -50, enemyType: "orange_cat", health: 10, 
@@ -67,10 +74,8 @@ const startGame = () => {
     ))
     const touchControls = CreateTouchControls(game, spriteSheet)
     touchControls.init()
-    if (game.mobile){
-        state.setBoard(4, touchControls)
-    }
-    
+    if (game.mobile)
+        state.setBoard(3, touchControls)
 }
 
 const PlayGame = () => {
@@ -78,13 +83,10 @@ const PlayGame = () => {
     gameBoard = CreateGameBoard()
     gameBoard.add(CreateCat(game, spriteSheet, "orange_cat", {
         tint: "0xFF0000FF",
-        x: (game.maxX / 2) - (SPRITES.orange_cat.w/2),
-        y: game.maxY - SPRITES.orange_cat.h,
         maxVel: 200
     }))
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    // gameBoard.add(CreateEnemy(game, spriteSheet, enemies.step)
     gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 }
 

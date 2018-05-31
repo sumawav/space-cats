@@ -74,8 +74,8 @@ const CreateCat = (game, spriteSheet, catType, props) => {
         .create(Sprite)
         .init(spriteSheet, catType)
     cat.game = game
-    cat.x = game.maxX / 2
-    cat.y = game.maxY / 2
+    cat.x = game.maxX/2 - cat.w/2
+    cat.y = game.maxY - game.playerOffset - cat.h
     cat.reloadTime = 0.25
     cat.spaceDown = true
     cat.reload = cat.reloadTime
