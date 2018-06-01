@@ -66,7 +66,7 @@ const startGame = () => {
         centerY: game.maxY/4,
         speed: 10
     }))
-    game.setBoard(1, CreateMainTitle(
+    game.setBoard(2, CreateMainTitle(
         game,
         "space cats",
         "PRESS Z TO PLAY",
@@ -75,7 +75,7 @@ const startGame = () => {
     const touchControls = CreateTouchControls(game, spriteSheet)
     touchControls.init()
     if (game.mobile)
-        state.setBoard(3, touchControls)
+        game.setBoard(3, touchControls)
 }
 
 const PlayGame = () => {

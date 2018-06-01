@@ -1,5 +1,5 @@
 const CreateGame = (opts) => {
-    let options = opts || {}
+    let options = opts || {},
         boards = [],
         dt = 0,
         last = 0,
@@ -22,7 +22,7 @@ const CreateGame = (opts) => {
         40:"down",
         90:"z",
         88:"x",
-        81: "q",
+        81:"q",
     }
     const STEP = 1 / 60
     const slowMoFactor = 1
@@ -114,7 +114,7 @@ const CreateGame = (opts) => {
         },
         removeBoard: (num) => {
             if (boards[num])
-                boards.splice(num, 1)
+                boards[num] = null
         },
         debug: () => {
             console.log(boards)
@@ -361,7 +361,7 @@ const CreateTouchControls = (game, spriteSheet) => {
         
             game.playerOffset = unitWidth + 20
         },
-        drawSquare2: (x, y, on) => {
+        drawSquare: (x, y, on) => {
             const tint = on ? "0xAAFFFFFF" : "0x33FFFFFF"
             spriteSheet.draw(
                 "square", x, y, blockWidth, tint, false
@@ -369,10 +369,10 @@ const CreateTouchControls = (game, spriteSheet) => {
         },
         draw: (ctx) => {    
             var yLoc = game.height - unitWidth
-            tC.drawSquare2(gutterWidth, yLoc, game.keys['left'])
-            tC.drawSquare2(unitWidth + gutterWidth, yLoc, game.keys['right'])
-            tC.drawSquare2(3 * unitWidth, yLoc, game.keys["space"])
-            tC.drawSquare2(4 * unitWidth, yLoc, game.keys['z'])
+            tC.drawSquare(gutterWidth, yLoc, game.keys['left'])
+            tC.drawSquare(unitWidth + gutterWidth, yLoc, game.keys['right'])
+            tC.drawSquare(3 * unitWidth, yLoc, game.keys["space"])
+            tC.drawSquare(4 * unitWidth, yLoc, game.keys['z'])
         },
         step: (dt) => {},
         trackTouch: (e) => {
