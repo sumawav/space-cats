@@ -9,8 +9,8 @@ const ExpStep = function(dt) {
         if (!layer.done){
             layer.pairs.map((e) => {
                 e.t += dt * layer.spread
-                e.x = this.centerX + e.t * e.cosTheta
-                e.y = this.centerY + e.t * e.sinTheta
+                e.x = this.centerX + e.t * e.vx
+                e.y = this.centerY + e.t * e.vy
             })
         }
     })
@@ -44,7 +44,7 @@ const CreateExplosion = (game, spriteSheet, x, y, props) => {
     exp.centerX = x
     exp.centerY = y
 
-    const createThetas = (min, max) => {
+    const generateAngles = (min, max) => {
         return Array(randomRangeInt(min,max)).fill().map(() => {
             return randomRangeInt(0, 2*Math.PI*1000) / 1000
         })        
@@ -55,33 +55,33 @@ const CreateExplosion = (game, spriteSheet, x, y, props) => {
             scale: 20,
             spread: 60,
             tint: "0xff743f3f",  //createHexColor(63, 63, 116),
-            thetas: createThetas(10, 15)
+            thetas: generateAngles(10, 15)
         },
         { 
             pairs:[],
             scale: 15,
             spread: 40,
             tint: "0xff2671df", // createHexColor(223, 113, 38),
-            thetas: createThetas(5, 10)
+            thetas: generateAngles(5, 10)
         },
         { 
             pairs:[],
             scale: 10,
             spread: 20,
             tint: "0xff36f2fb", // createHexColor(251, 242, 54),
-            thetas: createThetas(2, 5)
+            thetas: generateAngles(2, 5)
         }
     ]
     exp.layers.map((layer) => {
         layer.pairs = layer.thetas.map((e) => {
-            const cosTheta = Math.cos(e),
-                  sinTheta = Math.sin(e),
+            const vx = Math.cos(e),
+                  vy = Math.sin(e),
                   initialSpread = randomRangeInt(0,20)
             return {
-                x: exp.centerX + initialSpread*cosTheta,
-                y: exp.centerY + initialSpread*sinTheta,
-                cosTheta: cosTheta,
-                sinTheta: sinTheta,
+                x: exp.centerX + initialSpread*vx,
+                y: exp.centerY + initialSpread*vy,
+                vx: vx,
+                vy: vy,
                 t: initialSpread,
             }
         })
