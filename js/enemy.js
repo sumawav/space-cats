@@ -15,6 +15,11 @@ const EnemyStep = function(dt){
     this.x += this.vx * dt
     this.y += this.vy * dt
 
+    if (this.runner){
+        this.runner.x = this.x + this.w/2
+        this.runner.y = this.y + this.h/2
+        this.runner.update(dt)
+    }
     const collision = this.board.collide(this, OBJECT_PLAYER)
     if (collision) {
         collision.hit(this.damage)

@@ -302,11 +302,17 @@ const LevelStep = function(dt){
         if (this.t > curShip[1]){
             remove.push(curShip)
         } else if (curShip[0] < this.t){
-            let enemy = enemies[curShip[3]]
+            let enemyName = enemies(curShip[3])
             let override = curShip[4]
-            this.board.add(
-                CreateEnemy(this.game, this.spriteSheet, enemy, override)
-            )
+            this.deleteme = this.deleteme || false
+            if (!this.deleteme){
+                const enemy = CreateEnemy(this.game, this.spriteSheet, enemyName, override)
+                enemy.runner = danmaku1.createRunner(danmakuConfig);
+                this.deleteme = true
+                this.board.add(enemy)
+            }
+
+            // this.board.add(enemy)
             curShip[0] += curShip[2]
         }
         idx++
