@@ -13,10 +13,7 @@ const SPRITES = {
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
 
-var danmaku1
-var danmakuConfig
-
-var deleteme
+var danmaku
 
 // A Constant horizontal velocity
 // B Strength of horizontal sinusoidal velocity
@@ -122,132 +119,10 @@ const PlayGame = () => {
         tint: "0xFF0000FF",
         maxVel: 200
     })
-    // need to override SimpleSubRunner to accept dt
-    // NOTE: when a bullet's action list < 2, bulletmljs uses SimpleSubRunner
-    // NOTE: if a bullet's action list is > 1, SubRunner is used
-    bulletml.runner.SimpleSubRunner.prototype.update = function(dt) {
-        if (this.deltaX === null) this.deltaX = Math.cos(this.direction) * this.speed;
-        if (this.deltaY === null) this.deltaY = Math.sin(this.direction) * this.speed;
-
-        this.x += this.deltaX * this.config.speedRate * dt * 60;
-        this.y += this.deltaY * this.config.speedRate * dt * 60;
-    };
-    bulletml.runner.SubRunner.prototype.update = function(dt) {
-        if (this.stop) return;
-    
-        this.age += dt * 60;
-    
-        var conf = this.config;
-    
-        // update direction
-        if (this.age < this.chDirEnd) {
-            this.direction += this.dirIncr;
-        } else if (this.age === this.chDirEnd) {
-            this.direction = this.dirFin;
-        }
-    
-        // update speed
-        if (this.age < this.chSpdEnd) {
-            this.speed += this.spdIncr;
-        } else if (this.age === this.chSpdEnd) {
-            this.speed = this.spdFin;
-        }
-    
-        // update accel
-        if (this.age < this.aclEnd) {
-            this.speedH += this.aclIncrH;
-            this.speedV += this.aclIncrV;
-        } else if (this.age === this.aclEnd) {
-            this.speedH = this.aclFinH;
-            this.speedV = this.aclFinV;
-        }
-    
-        // move
-        this.x += Math.cos(this.direction) * this.speed * conf.speedRate;
-        this.y += Math.sin(this.direction) * this.speed * conf.speedRate;
-        this.x += this.speedH * conf.speedRate;
-        this.y += this.speedV * conf.speedRate;
-    
-        // proccess walker
-        if (this.age < this.waitTo || this.completed) {
-            return;
-        }
-        var cmd;
-        while (cmd = this.walker.next()) {
-            switch (cmd.commandName) {
-            case "fire":
-                this.fire(/**@type{bulletml.Fire}*/(cmd));
-                break;
-            case "wait":
-                this.waitTo = this.age + cmd.value;
-                return;
-            case "changeDirection":
-                this.changeDirection(/**@type{bulletml.ChangeDirection}*/(cmd));
-                break;
-            case "changeSpeed":
-                this.changeSpeed(/**@type{bulletml.ChangeSpeed}*/(cmd));
-                break;
-            case "accel":
-                this.accel(/**@type{bulletml.Accel}*/(cmd));
-                break;
-            case "vanish":
-                this.onVanish();
-                break;
-            case "notify":
-                this.notify(/**@type{bulletml.Notify}*/(cmd));
-                break;
-            }
-        }
-    
-        // complete
-        this.completed = true;
-        if (this.parentRunner !== null) {
-            this.parentRunner.completedChildCount += 1;
-        }
-    };
-    
-    bulletml.dsl();
-    danmaku1 = new bulletml.Root({
-        top: action([
-            repeat(999, [
-                fire(speed(1.5), bullet()),
-                repeat(200, [
-                    wait(1),
-                    fire(direction(11, "sequence"), speed(0, "sequence"), bullet()),
-                ]),
-                wait(120),
-                repeat(200, [
-                    wait(1),
-                    fire(direction(-11, "sequence"), speed(0, "sequence"), bullet()),
-                ]),
-                wait(120)
-            ]),
-        ]),
-    });
-    danmakuConfig = {
-        target: cat,
-        createNewBullet: function(runner, spec) {
-            deleteme = runner
-            let bullet = CreateBullet(game, spriteSheet, runner.x, runner.y)
-            runner.onVanish = function() {
-                // bullet.remove();
-                bullet.hit(10)
-            };
-            Object.assign(bullet, {
-                step: function (dt) {
-                    runner.update(dt)
-                    this.x = runner.x
-                    this.y = runner.y
-                }
-            })
-            gameBoard.add(bullet)
-        }
-    };
-
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
     gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 }
 
