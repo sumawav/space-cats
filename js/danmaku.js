@@ -82,9 +82,28 @@ bulletml.runner.SubRunner.prototype.update = function(dt) {
     }
 };
 
+const CreateDanmakuConfig = (target) => ({
+    target: target || { x: 0, y: 0},
+    createNewBullet: function(runner, spec) {
+        deleteme = runner
+        let bullet = CreateBullet(game, spriteSheet, runner.x, runner.y)
+        runner.onVanish = function() {
+            // bullet.remove();
+            bullet.hit(10)
+        };
+        Object.assign(bullet, {
+            step: function (dt) {
+                runner.update(dt)
+                this.x = runner.x
+                this.y = runner.y
+            }
+        })
+        gameBoard.add(bullet)
+    }
+})
 
 bulletml.dsl("bml_");
-danmaku1 = new bulletml.Root({
+Danmaku_01 = new bulletml.Root({
     top: bml_action([
         bml_repeat(999, [
             bml_repeat(5, [
@@ -105,26 +124,21 @@ danmaku1 = new bulletml.Root({
         ]),
     ]),
 });
+/*
+top: action([
+    repeat(999, [
+        fire(speed(2.1), bullet()),
+        wait("$rand * 20"),
+    ]),
+]),
+*/
+Danmaku_00 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(999, [
+            bml_fire(bml_speed(1.5), bml_bullet()),
+            bml_wait(100)
+        ]),
+    ]),
+});
 
 
-if(0){
-danmakuConfig = {
-    target: cat || { x: 100, y: 100},
-    createNewBullet: function(runner, spec) {
-        deleteme = runner
-        let bullet = CreateBullet(game, spriteSheet, runner.x, runner.y)
-        runner.onVanish = function() {
-            // bullet.remove();
-            bullet.hit(10)
-        };
-        Object.assign(bullet, {
-            step: function (dt) {
-                runner.update(dt)
-                this.x = runner.x
-                this.y = runner.y
-            }
-        })
-        gameBoard.add(bullet)
-    }
-};
-}

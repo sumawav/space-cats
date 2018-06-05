@@ -13,8 +13,6 @@ const SPRITES = {
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
 
-var danmaku
-
 // A Constant horizontal velocity
 // B Strength of horizontal sinusoidal velocity
 // C Period of horizontal sinusoidal velocity
@@ -28,31 +26,31 @@ const enemies = (type) => {
     switch(type){
         case "straight": 
             text = { 
-                x: 0, y: -50, enemyType: "orange_cat", health: 10, 
+                x: 0, y: -50, enemyType: "orange_cat", health: 2, 
                 E: 100 
             }
             break
         case "ltr": 
             text = { 
-                x: 0, y: -100, enemyType: "purple_cat", health: 10, 
+                x: 0, y: -100, enemyType: "purple_cat", health: 2, 
                 B: 75, C: 1, E: 100 
             }
             break
         case "circle": 
             text = { 
-                x: 250, y: -50, enemyType: "black_cat", health: 10, 
+                x: 250, y: -50, enemyType: "black_cat", health: 2, 
                 A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2 
             }
             break
         case "wiggle": 
             text = { 
-                x: 100, y: -50, enemyType: "cat", health: 20, 
+                x: 100, y: -50, enemyType: "cat", health: 2, 
                 B: 50, C: 4, E: 100 
             }
             break
         case "step": 
             text = { 
-                x: 0, y: -50, enemyType: "cat", health: 10, 
+                x: 0, y: -50, enemyType: "cat", health: 2, 
                 B: 150, C: 1.2, E: 75
             }
             break
@@ -60,7 +58,7 @@ const enemies = (type) => {
             let x = game ? game.maxX / 2 : 100
             let y = game ? game.maxY / 4: 100
             text = {
-                x: x, y: y, enemyType: "cat", health: 10
+                x: x, y: y, enemyType: "cat", health: 20, danmaku: 1
             }
         break
         default:
@@ -81,17 +79,22 @@ var level1 = [
     [ 18200,  20000, 500, 'straight', { x: 90 } ],
     [ 18200,  20000, 500, 'straight', { x: 10 } ],
     [ 22000,  25000, 400, 'wiggle', { x: 150 }],
-    [ 22000,  25000, 400, 'wiggle', { x: 100 }]
+    [ 22000,  25000, 400, 'wiggle', { x: 100 }],
+    [ 26000,  26500, 500, "still"]
+    // [ 26000,  27000, 500, ]
 ];
 
 DEBUG_LEVEL = [
-    [0, 4000, 500, "still"]
+    [0, 300, 500, "still"]
 ]
 
 var gameBoard
 const game = CreateGame({debug: false})
 const spriteSheet = CreateSpriteSheet()
+
 var cat
+var danmakuConfig
+
 
 const startGame = () => {
     game.renderer.bkg(0.0, 0.0, 0.0)
@@ -116,9 +119,10 @@ const PlayGame = () => {
     game.gameOver = false
     gameBoard = CreateGameBoard()
     cat = CreateCat(game, spriteSheet, "orange_cat", {
-        tint: "0xFF0000FF",
+        tint: 0x00000000,
         maxVel: 200
     })
+    danmakuConfig = CreateDanmakuConfig(cat)
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)

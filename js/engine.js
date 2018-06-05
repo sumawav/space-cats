@@ -20,9 +20,10 @@ const CreateGame = (opts) => {
         38:"up", 
         39:"right", 
         40:"down",
-        90:"z",
-        88:"x",
+        80:"p",
         81:"q",
+        88:"x",
+        90:"z",
     }
     const STEP = 1 / 60
     const slowMoFactor = 1
@@ -61,6 +62,15 @@ const CreateGame = (opts) => {
             fpsMeter.tick()
         let now = timestamp()
         dt += Math.min(1, (now - last) / 1000)
+        if (state.keys["p"] && !state.pDown){
+            this.pause = !this.pause
+            state.pDown = true
+        } else if (!state.keys["p"] && state.pDown){
+            state.pDown = false
+        }
+        if (this.pause)
+            dt = 0
+
         while(dt > STEP) {
             dt -= STEP
             update(STEP / state.sloMoFactor)
@@ -305,10 +315,6 @@ const LevelStep = function(dt){
             let enemyName = enemies(curShip[3])
             let override = curShip[4]
             const enemy = CreateEnemy(this.game, this.spriteSheet, enemyName, override)
-            if (danmaku){
-                enemy.runner = danmaku1.createRunner(danmakuConfig);
-            }
-            
             this.board.add(enemy)
             curShip[0] += curShip[2]
         }

@@ -52,8 +52,8 @@ const CatStep = function(dt){
         this.spaceDown = false
     }
 
-    this.x += this.vx * dt
-    this.y += this.vy * dt
+    this.x += this.vx * dt /* * this.game.sloMoFactor */
+    this.y += this.vy * dt /* * this.game.sloMoFactor */
 
 }
 
@@ -76,7 +76,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.game = game
     cat.x = game.maxX/2 - cat.w/2
     cat.y = game.maxY - game.playerOffset - cat.h
-    cat.reloadTime = 0.25
+    cat.reloadTime = 0.10
     cat.spaceDown = true
     cat.reload = cat.reloadTime
     cat.type = OBJECT_PLAYER
@@ -105,7 +105,7 @@ const CreateCatMissile = (game, spriteSheet, x, y, props) => {
         .create(Sprite)
         .init(spriteSheet, "cat_missile", {
             vy: -700,
-            damage: 10
+            damage: 1
         })
     missile.x = x - missile.w / 2
     missile.y = y - missile.h
