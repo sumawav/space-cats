@@ -126,8 +126,8 @@ const PlayGame = () => {
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 }
 
 const GameOver = () => {
@@ -136,7 +136,7 @@ const GameOver = () => {
         game,
         "game over",
         "PRESS Z TO PLAY",
-        PlayGame
+        PlayGame,
     ))
 }
 
