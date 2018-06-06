@@ -47,6 +47,10 @@ table {
 	border-spacing: 0;
 }
 
+/* black bg */
+body {
+    background-color: black;
+}
 
 /* Center the container */
 #container {
@@ -56,7 +60,7 @@ table {
 }
 
 /* Give canvas a background */
-canvas {
-  /* background-color:black; */
-
+#canvas {
+    border: 4px solid #AA0000;
+    border-radius: 15px;
 }

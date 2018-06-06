@@ -234,8 +234,9 @@ const CreateSpriteSheet = () => {
     return Object.assign(state)
 }
 
-const CreateGameBoard = () => {
+const CreateGameBoard = (game) => {
     let state = {
+        game: game,
         objects: [],
         cnt: {},
         add: (obj) => {
@@ -274,7 +275,13 @@ const CreateGameBoard = () => {
                 return func(e)
             }) || false
         },
+        binDetect: (bin, func) => {
+            return bin.find((e) => {
+                return func(e)
+            }) || false
+        },
         step: (dt) => {
+            state.bins = []
             state.resetRemoved()
             state.iterate("step", dt)
             state.finalizeRemoved()
@@ -298,7 +305,31 @@ const CreateGameBoard = () => {
                 }
             })
         },
-
+        binCollide: (obj, type) => {
+            if (!obj.bin)
+                return
+            return state.binDetect(obj.bin, (e) => {
+                let col = (!type || e.type & type) && state.overlap(obj, e)
+                return col ? e : false
+            })
+        },
+        binSize: 48,
+        bins: [],
+        resetBins: () => {
+            state.bins = []
+        },
+        reportPosition: (obj) => {
+            let col = Math.floor( (obj.x - state.game.minX) / state.binSize )
+            let cell = Math.floor( (obj.y - state.game.minY) / state.binSize )
+            if (cell < 0 || col < 0)
+                return null
+            if (!state.bins[col])
+                state.bins[col] = []
+            if (!state.bins[col][cell])
+                state.bins[col][cell] = []
+            state.bins[col][cell].push(obj)
+            return state.bins[col][cell]
+        }
     }
     return Object.assign(state)
 }

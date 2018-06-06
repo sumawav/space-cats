@@ -89,7 +89,7 @@ DEBUG_LEVEL = [
 ]
 
 var gameBoard
-const game = CreateGame({debug: false})
+const game = CreateGame({debug: true})
 const spriteSheet = CreateSpriteSheet()
 
 var cat
@@ -117,17 +117,17 @@ const startGame = () => {
 
 const PlayGame = () => {
     game.gameOver = false
-    gameBoard = CreateGameBoard()
+    gameBoard = CreateGameBoard(game)
     cat = CreateCat(game, spriteSheet, "orange_cat", {
         tint: 0x00000000,
-        maxVel: 200
+        maxVel: 200,
     })
     danmakuConfig = CreateDanmakuConfig(cat)
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 }
 
 const GameOver = () => {

@@ -55,6 +55,8 @@ const CatStep = function(dt){
     this.x += this.vx * dt /* * this.game.sloMoFactor */
     this.y += this.vy * dt /* * this.game.sloMoFactor */
 
+    this.board.reportPosition(this)
+
 }
 
 const CatHit = function(damage){
@@ -92,12 +94,16 @@ const CreateCat = (game, spriteSheet, catType, props) => {
 const CatMissileStep = function(dt) {
     this.y += this.vy * dt
 
-    const collision = this.board.collide(this, OBJECT_ENEMY)
+    const collision = (this.bin && this.bin.length > 1) ? 
+                      this.board.binCollide(this, OBJECT_ENEMY) : 
+                      false
     if (collision){
         collision.hit(this.damage)
         this.board.remove(this)
     }else if (this.y < -this.h) {
         this.board.remove(this)
+    } else {
+        this.bin = this.board.reportPosition(this)
     }
 }
 const CreateCatMissile = (game, spriteSheet, x, y, props) => {

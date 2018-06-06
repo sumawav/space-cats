@@ -29,7 +29,10 @@ const EnemyStep = function(dt){
         this.runner.y = this.y + this.h/2
         this.runner.update(dt)
     }
-    const collision = this.board.collide(this, OBJECT_PLAYER)
+    // const collision = this.board.collide(this, OBJECT_PLAYER)
+    const collision = (this.bin && this.bin.length > 1) ? 
+                      this.board.binCollide(this, OBJECT_PLAYER) : 
+                      false
     if (collision) {
         collision.hit(this.damage)
         this.board.remove(this)
@@ -37,7 +40,10 @@ const EnemyStep = function(dt){
 
     if (this.y > game.maxY || this.x < -this.w || this.x > game.width) {
         this.board.remove(this)
+    } else {
+        this.bin = this.board.reportPosition(this)
     }
+    
 }
 
 const EnemyHit = function(damage){

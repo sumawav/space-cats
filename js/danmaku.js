@@ -83,21 +83,12 @@ bulletml.runner.SubRunner.prototype.update = function(dt) {
 };
 
 const CreateDanmakuConfig = (target) => ({
-    target: target || { x: 0, y: 0},
+    target: target,
     createNewBullet: function(runner, spec) {
-        let bullet = CreateBullet(game, spriteSheet, runner.x, runner.y)
+        let bullet = CreateDanmakuBullet(game, spriteSheet, runner)
         runner.onVanish = function() {
-            // bullet.remove();
-            bullet.hit(10)
+            debugger
         };
-        Object.assign(bullet, {
-            step: function (dt) {
-                runner.update(dt)
-                this.x = runner.x
-                this.y = runner.y
-                this.areaCheck()
-            }
-        })
         gameBoard.add(bullet)
     }
 })
