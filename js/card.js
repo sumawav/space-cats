@@ -8,8 +8,10 @@ const CardDraw = function() {
         this.rot,
         this.x, //x
         this.y, //y
-        1,1,0,0,1,1
-    )
+        1,
+        1,
+        0,0,1,1
+    )        
 }
 const CardStep = function(dt) {
     if (!this.game.keys["z"])

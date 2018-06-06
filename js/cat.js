@@ -1,5 +1,12 @@
 const CatStep = function(dt){
     this.reload -= dt
+    if (this.game.sloMoFactor !== 1 && this.sloMoMeter > 0){
+        this.sloMoMeter -= 0.25
+    }
+    if (this.sloMoMeter <= 0){
+        this.game.sloMoFactor = 1
+    }
+        
     const gKeys = this.game.keys
     if (this.game.mobile){
         this.vx = gKeys.touchDX * 100
@@ -24,10 +31,12 @@ const CatStep = function(dt){
         // console.log("Z DOWN")
         this.reload = this.reloadTime
         let cmL = CreateCatMissile(
-            game, spriteSheet, this.x, this.y
+            game, spriteSheet, this.x, this.y,
+            { cat: this }
         )
         let cmR = CreateCatMissile(
-            game, spriteSheet, this.x+this.w, this.y
+            game, spriteSheet, this.x+this.w, this.y,
+            { cat: this }
         )
         this.board.add(cmL)
         this.board.add(cmR)
@@ -48,12 +57,13 @@ const CatStep = function(dt){
     }
     // slow motion
     if (gKeys.space && !this.spaceDown){
-        console.log("slomo")
-        this.game.sloMoFactor = 5
+        if (this.game.sloMoFactor === 5)
+            this.game.sloMoFactor = 1
+        else if (this.sloMoMeter > 0){
+            this.game.sloMoFactor = 5
+        }
         this.spaceDown = true
     } else if (!gKeys.space && this.spaceDown){
-        console.log("normalspeed")
-        this.game.sloMoFactor = 1
         this.spaceDown = false
     }
 
@@ -89,6 +99,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.reloadTime = 0.10
     cat.spaceDown = true
     cat.reload = cat.reloadTime
+    cat.sloMoMeter = 100
     cat.type = OBJECT_PLAYER
 
     Object.assign(cat, props || {})
@@ -107,7 +118,7 @@ const CatMissileStep = function(dt) {
                       this.board.binCollide(this, OBJECT_ENEMY) : 
                       false
     if (collision){
-        collision.hit(this.damage)
+        collision.hit(this.damage, this.cat)
         this.board.remove(this)
     }else if (this.y < -this.h) {
         this.board.remove(this)

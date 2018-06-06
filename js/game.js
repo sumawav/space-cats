@@ -89,7 +89,7 @@ DEBUG_LEVEL = [
 ]
 
 var gameBoard
-const game = CreateGame({debug: true})
+const game = CreateGame({debug: false})
 const spriteSheet = CreateSpriteSheet()
 
 var cat
@@ -120,6 +120,7 @@ const startGame = () => {
 
 const PlayGame = () => {
     game.gameOver = false
+    game.sloMoFactor = 1
     gameBoard = CreateGameBoard(game)
     cat = CreateCat(game, spriteSheet, "orange_cat", {
         tint: 0x00000000,
@@ -131,6 +132,8 @@ const PlayGame = () => {
     game.removeBoard(2)
     // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
     gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+
+    game.setBoard(4, CreateHud(game, spriteSheet, cat, 5))
 }
 
 const GameOver = () => {

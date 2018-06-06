@@ -45,9 +45,11 @@ const EnemyStep = function(dt){
     }
 }
 
-const EnemyHit = function(damage){
+const EnemyHit = function(damage, cat){
     this.health -= damage
     if (this.health < 0){
+        if (this.game.sloMoFactor === 1)
+            cat.sloMoMeter += 5
         this.board.remove(this)
         this.board.add(CreateExplosion(
             game, spriteSheet, this.x + this.w/2, this.y + this.h/2
@@ -69,6 +71,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         type: OBJECT_ENEMY,
         blink: false,
         blinkTimer: 0,
+        game: game
     }, blueprint, override)
     Object.assign(en, {
         runner: createRunner(en.danmaku, danmakuConfig)

@@ -96,8 +96,8 @@ const CreateDanmakuConfig = (target) => ({
 bulletml.dsl("bml_");
 Danmaku_00 = new bulletml.Root({
     top: bml_action([
-        bml_repeat(3, [
-            bml_wait("40 + $rand * 100"),
+        bml_repeat(1, [
+            bml_wait("100 + $rand * 100"),
             bml_fire(bml_speed(1.5), bml_bullet())
         ]),
     ]),
