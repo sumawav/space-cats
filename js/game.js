@@ -33,7 +33,7 @@ const enemies = (type) => {
         case "ltr": 
             text = { 
                 x: 0, y: -100, enemyType: "purple_cat", health: 2, 
-                B: 75, C: 1, E: 100 
+                B: 75, C: 1, E: 100, danmaku: 2
             }
             break
         case "circle": 
@@ -45,7 +45,7 @@ const enemies = (type) => {
         case "wiggle": 
             text = { 
                 x: 100, y: -50, enemyType: "cat", health: 2, 
-                B: 50, C: 4, E: 100 
+                B: 50, C: 4, E: 100, danmaku: 3
             }
             break
         case "step": 

@@ -82,6 +82,12 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
 }
 const createRunner = (danmaku, config) => {
     switch (danmaku){
+        case 3:
+            return Danmaku_03.createRunner(config)
+            break
+        case 2:
+            return Danmaku_02.createRunner(config)
+            break
         case 1:
             return Danmaku_01.createRunner(config)
             break

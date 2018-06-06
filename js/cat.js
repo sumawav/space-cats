@@ -110,7 +110,7 @@ const CreateCatMissile = (game, spriteSheet, x, y, props) => {
         .create(Sprite)
         .init(spriteSheet, "cat_missile", {
             vy: -700,
-            damage: 3
+            damage: 1
         })
     missile.x = x - missile.w / 2
     missile.y = y - missile.h
