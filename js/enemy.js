@@ -38,12 +38,11 @@ const EnemyStep = function(dt){
         this.board.remove(this)
     }
 
-    if (this.y > game.maxY || this.x < -this.w || this.x > game.width) {
+    if (this.y > game.maxY || this.x < -this.w || this.x > game.maxX) {
         this.board.remove(this)
     } else {
         this.bin = this.board.reportPosition(this)
     }
-    
 }
 
 const EnemyHit = function(damage){

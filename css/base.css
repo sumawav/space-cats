@@ -61,6 +61,7 @@ body {
 
 /* Give canvas a background */
 #canvas {
-    border: 4px solid #AA0000;
-    border-radius: 15px;
+    /* box-sizing: border-box; */
+    /* border: 4px solid #AA0000; */
+    /* border-radius: 15px; */
 }

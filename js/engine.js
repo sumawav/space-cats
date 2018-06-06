@@ -315,19 +315,38 @@ const CreateGameBoard = (game) => {
         },
         binSize: 48,
         bins: [],
+        checkBin: (col, cell) => {
+            if (cell < 0 || col < 0)
+                return false
+            if (!state.bins[col])
+                state.bins[col] = []
+            if (!state.bins[col][cell])
+                state.bins[col][cell] = []
+            return true
+        },
         resetBins: () => {
             state.bins = []
         },
         reportPosition: (obj) => {
             let col = Math.floor( (obj.x - state.game.minX) / state.binSize )
             let cell = Math.floor( (obj.y - state.game.minY) / state.binSize )
-            if (cell < 0 || col < 0)
-                return null
-            if (!state.bins[col])
-                state.bins[col] = []
-            if (!state.bins[col][cell])
-                state.bins[col][cell] = []
-            state.bins[col][cell].push(obj)
+            let xOverflow = (obj.x + obj.w) > state.binSize
+            let yOverflow = (obj.y + obj.h) > state.binSize
+            let xyOverflow = xOverflow && yOverflow
+            if (col < 0 || cell < 0)
+                return false
+            if(state.checkBin(col, cell))
+                state.bins[col][cell].push(obj)
+            if (xOverflow && state.checkBin(col + 1, cell)){
+                state.bins[col+1][cell].push(obj)
+            }
+            if (yOverflow && state.checkBin(col, cell + 1)){
+                state.bins[col][cell+1].push(obj)
+            }
+            if (xyOverflow && state.checkBin(col + 1, cell + 1)){
+                state.bins[col+1][cell+1].push(obj)
+            }
+                
             return state.bins[col][cell]
         }
     }

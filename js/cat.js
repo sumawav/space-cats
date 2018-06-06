@@ -93,6 +93,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
 }
 const CatMissileStep = function(dt) {
     this.y += this.vy * dt
+    this.bin = this.board.reportPosition(this)
 
     const collision = (this.bin && this.bin.length > 1) ? 
                       this.board.binCollide(this, OBJECT_ENEMY) : 
@@ -102,8 +103,6 @@ const CatMissileStep = function(dt) {
         this.board.remove(this)
     }else if (this.y < -this.h) {
         this.board.remove(this)
-    } else {
-        this.bin = this.board.reportPosition(this)
     }
 }
 const CreateCatMissile = (game, spriteSheet, x, y, props) => {
@@ -111,7 +110,7 @@ const CreateCatMissile = (game, spriteSheet, x, y, props) => {
         .create(Sprite)
         .init(spriteSheet, "cat_missile", {
             vy: -700,
-            damage: 1
+            damage: 3
         })
     missile.x = x - missile.w / 2
     missile.y = y - missile.h
