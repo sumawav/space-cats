@@ -444,54 +444,43 @@ const CreateTouchControls = (game, spriteSheet) => {
             var touch, x
     
             e.preventDefault()
-            game.keys['left'] = false
-            game.keys['right'] = false
-            // game.keys['space'] = false
             game.keys['touchDX'] = null
             game.keys['touchDY'] = null
             for (var i = 0; i < e.targetTouches.length; i++) {
                 touch = e.targetTouches[i]
+                console.log(e.targetTouches.length)
                 x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
                 y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
-                // if (x < unitWidth) {
-                //     game.keys['left'] = true
-                // }
-                // if (x > unitWidth && x < 2 * unitWidth) {
-                //     game.keys['right'] = true
-                // }
-                if (x < 3*unitWidth){
+                if (x < 3*unitWidth || y < game.maxY - unitWidth){
                     tC.oldTouchX = tC.oldTouchX || touch.pageX
                     tC.oldTouchY = tC.oldTouchY || touch.pageY
 
-                    game.keys.touchDX = touch.pageX - tC.oldTouchX 
+                    game.keys.touchDX = touch.pageX - tC.oldTouchX
                     game.keys.touchDY = touch.pageY - tC.oldTouchY
-
-                    // console.log("dX: " + game.keys.touchDX)
-                    // console.log("dY: " + game.keys.touchDY)
 
                     tC.oldTouchX = touch.pageX
                     tC.oldTouchY = touch.pageY
+                    break
                 }
-
-                // if (x > 3*unitWidth && x < 4 * unitWidth) {
-                //     game.keys['space'] = true
-                // }
             }
+
     
             if (e.type == 'touchstart' || e.type == 'touchend') {
                 for (i = 0; i < e.changedTouches.length; i++) {
                     touch = e.changedTouches[i]
                     x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
                     y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
-                    if (x < 3*unitWidth || e.type === "touchend"){
-                        tC.oldTouchX = null
-                        tC.oldTouchY = null
-                    }
-                    if (x > 3*unitWidth && x < 4 * unitWidth) {
-                        game.keys['space'] = (e.type === "touchstart")
-                    }
-                    if (x > 4 * unitWidth) {
-                        game.keys['z'] = (e.type == 'touchstart')
+                    if (y > game.maxY - unitWidth){
+                        if (x < 3*unitWidth || e.type === "touchend"){
+                            tC.oldTouchX = null
+                            tC.oldTouchY = null
+                        }                      
+                        if (x > 3*unitWidth && x < 4 * unitWidth) {
+                            game.keys['space'] = (e.type === "touchstart")
+                        }
+                        if (x > 4 * unitWidth) {
+                            game.keys['z'] = (e.type == 'touchstart')
+                        }
                     }
                 }
             }

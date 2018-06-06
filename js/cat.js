@@ -71,7 +71,14 @@ const CatStep = function(dt){
     this.x += this.vx * dt /* * this.game.sloMoFactor */
     this.y += this.vy * dt /* * this.game.sloMoFactor */
 
-
+    if (this.x < 0)
+        this.x = 0
+    if (this.game.maxX - this.w < this.x) 
+        this.x = this.game.maxX - this.w 
+    if (this.y < 0)
+        this.y = 0
+    if (this.game.maxY - this.h < this.y)
+        this.y = this.game.maxY - this.h
 
     this.board.reportPosition(this)
 
