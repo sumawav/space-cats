@@ -1,19 +1,24 @@
 const CatStep = function(dt){
     this.reload -= dt
     const gKeys = this.game.keys
-    if (gKeys.right)
-        this.vx = this.maxVel
-    else if (gKeys.left)    
-        this.vx = -this.maxVel
-    else 
-        this.vx = 0
+    if (this.game.mobile){
+        this.vx = gKeys.touchDX * 100
+        this.vy = gKeys.touchDY * 100
+    } else {
+        if (gKeys.right)
+            this.vx = this.maxVel
+        else if (gKeys.left)    
+            this.vx = -this.maxVel
+        else 
+            this.vx = 0
+        if (gKeys.down)    
+            this.vy = this.maxVel
+        else if (gKeys.up) 
+            this.vy = -this.maxVel 
+        else 
+            this.vy = 0        
+    }
 
-    if (gKeys.down)    
-        this.vy = this.maxVel
-    else if (gKeys.up) 
-        this.vy = -this.maxVel 
-    else 
-        this.vy = 0
     // shoot
     if (gKeys.z && !this.zDown && this.reload < 0) {
         // console.log("Z DOWN")
@@ -44,7 +49,7 @@ const CatStep = function(dt){
     // slow motion
     if (gKeys.space && !this.spaceDown){
         console.log("slomo")
-        game.sloMoFactor = 5
+        this.game.sloMoFactor = 5
         this.spaceDown = true
     } else if (!gKeys.space && this.spaceDown){
         console.log("normalspeed")
@@ -52,8 +57,11 @@ const CatStep = function(dt){
         this.spaceDown = false
     }
 
+
     this.x += this.vx * dt /* * this.game.sloMoFactor */
     this.y += this.vy * dt /* * this.game.sloMoFactor */
+
+
 
     this.board.reportPosition(this)
 

@@ -109,10 +109,13 @@ const startGame = () => {
         "PRESS Z TO PLAY",
         PlayGame
     ))
-    const touchControls = CreateTouchControls(game, spriteSheet)
-    touchControls.init()
-    if (game.mobile)
+
+    if (game.mobile){
+        const touchControls = CreateTouchControls(game, spriteSheet)
+        touchControls.init()
         game.setBoard(3, touchControls)
+    }
+        
 }
 
 const PlayGame = () => {

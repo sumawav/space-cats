@@ -1,6 +1,6 @@
 const BulletDraw = function() {
     this.spriteSheet.draw(
-        this.sprite, this.x, this.y, this.scale, this.tint, false
+        this.sprite, this.x, this.y, this.scale, this.tint, true
     )
 }
 

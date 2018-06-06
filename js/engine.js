@@ -34,7 +34,7 @@ const CreateGame = (opts) => {
             new Date().getTime()
     }
     const setupInput = () => {
-        state.keys = {}
+        state.keys = state.keys || {}
         window.addEventListener('keydown', function (e) {
             // console.log(e.keyCode)
             if (KEY_CODES[e.keyCode]) {
@@ -54,8 +54,8 @@ const CreateGame = (opts) => {
             // console.log("canvas y: " + evt.layerY)
         }
         state.canvas.onmouseup = function (evt) {}
-        state.canvas.ontouchstart = function (evt) {}
-        state.canvas.ontouchend = function (evt) {}
+        // state.canvas.ontouchstart = function (evt) {}
+        // state.canvas.ontouchend = function (evt) {}
     }
     const loop = () => {
         if (options.debug)
@@ -138,6 +138,10 @@ const CreateGame = (opts) => {
             if (hasTouch) { state.mobile = true; }
             // if not, or screen too big -> not mobile
             if (screen.width >= 1280 || !hasTouch) { return false; }
+            // add touch controls
+            state.keys = state.keys || {}
+            state.keys.touchDX = 0
+            state.keys.touchDY = 0
             // if screen is landscape, ask to rotate
             if (w > h) {
                 alert("Please rotate the device and then click OK")
@@ -415,8 +419,8 @@ const CreateTouchControls = (game, spriteSheet) => {
             game.canvas.addEventListener('touchend', tC.trackTouch, true)
         
             // For Android
-            game.canvas.addEventListener('dblclick', (e) => { e.preventDefault() }, true)
-            game.canvas.addEventListener('click', (e) => { e.preventDefault() }, true)
+            // game.canvas.addEventListener('dblclick', (e) => { e.preventDefault() }, true)
+            // game.canvas.addEventListener('click', (e) => { e.preventDefault() }, true)
         
             game.playerOffset = unitWidth + 20
         },
@@ -428,37 +432,64 @@ const CreateTouchControls = (game, spriteSheet) => {
         },
         draw: (ctx) => {    
             var yLoc = game.height - unitWidth
-            tC.drawSquare(gutterWidth, yLoc, game.keys['left'])
-            tC.drawSquare(unitWidth + gutterWidth, yLoc, game.keys['right'])
+            // tC.drawSquare(gutterWidth, yLoc, game.keys['left'])
+            // tC.drawSquare(unitWidth + gutterWidth, yLoc, game.keys['right'])
             tC.drawSquare(3 * unitWidth, yLoc, game.keys["space"])
             tC.drawSquare(4 * unitWidth, yLoc, game.keys['z'])
         },
         step: (dt) => {},
+        oldTouchX: null,
+        oldTouchY: null,
         trackTouch: (e) => {
             var touch, x
     
             e.preventDefault()
             game.keys['left'] = false
             game.keys['right'] = false
-            game.keys['space'] = false
+            // game.keys['space'] = false
+            game.keys['touchDX'] = null
+            game.keys['touchDY'] = null
             for (var i = 0; i < e.targetTouches.length; i++) {
                 touch = e.targetTouches[i]
                 x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
-                if (x < unitWidth) {
-                    game.keys['left'] = true
+                y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
+                // if (x < unitWidth) {
+                //     game.keys['left'] = true
+                // }
+                // if (x > unitWidth && x < 2 * unitWidth) {
+                //     game.keys['right'] = true
+                // }
+                if (x < 3*unitWidth){
+                    tC.oldTouchX = tC.oldTouchX || touch.pageX
+                    tC.oldTouchY = tC.oldTouchY || touch.pageY
+
+                    game.keys.touchDX = touch.pageX - tC.oldTouchX 
+                    game.keys.touchDY = touch.pageY - tC.oldTouchY
+
+                    // console.log("dX: " + game.keys.touchDX)
+                    // console.log("dY: " + game.keys.touchDY)
+
+                    tC.oldTouchX = touch.pageX
+                    tC.oldTouchY = touch.pageY
                 }
-                if (x > unitWidth && x < 2 * unitWidth) {
-                    game.keys['right'] = true
-                }
-                if (x > 3*unitWidth && x < 4 * unitWidth) {
-                    game.keys['space'] = true
-                }
+
+                // if (x > 3*unitWidth && x < 4 * unitWidth) {
+                //     game.keys['space'] = true
+                // }
             }
     
             if (e.type == 'touchstart' || e.type == 'touchend') {
                 for (i = 0; i < e.changedTouches.length; i++) {
                     touch = e.changedTouches[i]
                     x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
+                    y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
+                    if (x < 3*unitWidth || e.type === "touchend"){
+                        tC.oldTouchX = null
+                        tC.oldTouchY = null
+                    }
+                    if (x > 3*unitWidth && x < 4 * unitWidth) {
+                        game.keys['space'] = (e.type === "touchstart")
+                    }
                     if (x > 4 * unitWidth) {
                         game.keys['z'] = (e.type == 'touchstart')
                     }
