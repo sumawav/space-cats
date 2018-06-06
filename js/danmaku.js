@@ -85,7 +85,7 @@ bulletml.runner.SubRunner.prototype.update = function(dt) {
 const CreateDanmakuConfig = (target) => ({
     target: target,
     createNewBullet: function(runner, spec) {
-        let bullet = CreateDanmakuBullet(game, spriteSheet, runner)
+        let bullet = CreateDanmakuBullet(game, spriteSheet, runner, spec)
         runner.onVanish = function() {
             debugger
         };
@@ -137,10 +137,10 @@ Danmaku_02 = new bulletml.Root({
     top: bml_action([
         bml_repeat(3, [
             bml_wait(100),
-            bml_fire(bml_speed(4.5), bml_bullet()),
+            bml_fire(bml_speed(4.5), bml_bullet({ tint: 0xFF8888FF})),
             bml_repeat(5,[
                 bml_wait(5),
-                bml_fire(bml_speed(0, "sequence"), bml_direction(0, "sequence"), bml_bullet()),
+                bml_fire(bml_speed(0, "sequence"), bml_direction(0, "sequence"), bml_bullet({ tint: 0xFF8888FF})),
             ])
         ]),
     ]),
@@ -151,17 +151,17 @@ Danmaku_03 = new bulletml.Root({
         bml_repeat(3, [
             bml_wait(100),
             bml_repeat(1, [
-                bml_fire(bml_speed(1.5), bml_direction(45, "absolute"), bml_bullet()),
+                bml_fire(bml_speed(1.5), bml_direction(45, "absolute"), bml_bullet({ tint: 0xFFFF88FF})),
                 bml_repeat(3,[
-                    bml_fire(bml_speed(0, "sequence"), bml_direction(90, "sequence"), bml_bullet()),
+                    bml_fire(bml_speed(0, "sequence"), bml_direction(90, "sequence"), bml_bullet({ tint: 0xFFFF88FF})),
                 ]),
                 bml_wait(50)
             ]),
             bml_wait(100),
             bml_repeat(1, [
-                bml_fire(bml_speed(1.5), bml_direction(90, "absolute"), bml_bullet()),
+                bml_fire(bml_speed(1.5), bml_direction(90, "absolute"), bml_bullet({ tint: 0xFF88FF88})),
                 bml_repeat(3,[
-                    bml_fire(bml_speed(0, "sequence"), bml_direction(90, "sequence"), bml_bullet()),
+                    bml_fire(bml_speed(0, "sequence"), bml_direction(90, "sequence"), bml_bullet({ tint: 0xFF88FF88})),
                 ]),
                 bml_wait(50)
             ])
