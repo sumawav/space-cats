@@ -89,7 +89,7 @@ DEBUG_LEVEL = [
 ]
 
 var gameBoard
-const game = CreateGame({debug: true})
+const game = CreateGame({debug: false})
 const spriteSheet = CreateSpriteSheet()
 
 var cat
@@ -133,7 +133,7 @@ const PlayGame = () => {
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
     // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5))
 }
