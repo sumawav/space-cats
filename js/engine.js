@@ -412,11 +412,16 @@ const CreateTouchControls = (game, spriteSheet) => {
     const unitWidth = game.maxX / 5
     const blockWidth = unitWidth - gutterWidth
 
+    const threshold = 25
+
     let tC = {
         init: () => {
             game.canvas.addEventListener('touchstart', tC.trackTouch, true)
-            game.canvas.addEventListener('touchmove', tC.trackTouch, true)
             game.canvas.addEventListener('touchend', tC.trackTouch, true)
+
+            game.canvas.addEventListener('touchmove', (e) => {
+                tC.touches = e.touches
+            }, true)
         
             // For Android
             // game.canvas.addEventListener('dblclick', (e) => { e.preventDefault() }, true)
@@ -437,44 +442,40 @@ const CreateTouchControls = (game, spriteSheet) => {
             tC.drawSquare(3 * unitWidth, yLoc, game.keys["space"])
             tC.drawSquare(4 * unitWidth, yLoc, game.keys['z'])
         },
-        step: (dt) => {},
-        oldTouchX: null,
-        oldTouchY: null,
+        oldPx: null,
+        oldPy: null,
+        step: (dt) => {        
+            if(!tC.touches)
+                return
+            let touch = tC.touches[0];
+            let px = touch.pageX;
+            let py = touch.pageY;
+    
+            // console.log('touch at ' + px +',' + py);
+            tC.oldPx = tC.oldPx || px
+            tC.oldPy = tC.oldPy || py
+            let dX = px - tC.oldPx
+            let dY = py - tC.oldPy
+            if (dY > threshold || dY < -threshold || dX > threshold || dX < -threshold){
+                dX = 0
+                dY = 0
+            }
+    
+            game.keys.touchDX = dX
+            game.keys.touchDY = dY
+            
+            tC.oldPx = px
+            tC.oldPy = py
+        },
         trackTouch: (e) => {
             var touch, x
-    
             e.preventDefault()
-            game.keys['touchDX'] = null
-            game.keys['touchDY'] = null
-            for (var i = 0; i < e.targetTouches.length; i++) {
-                touch = e.targetTouches[i]
-                console.log(e.targetTouches.length)
-                x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
-                y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
-                if (x < 3*unitWidth || y < game.maxY - unitWidth){
-                    tC.oldTouchX = tC.oldTouchX || touch.pageX
-                    tC.oldTouchY = tC.oldTouchY || touch.pageY
-
-                    game.keys.touchDX = touch.pageX - tC.oldTouchX
-                    game.keys.touchDY = touch.pageY - tC.oldTouchY
-
-                    tC.oldTouchX = touch.pageX
-                    tC.oldTouchY = touch.pageY
-                    break
-                }
-            }
-
-    
             if (e.type == 'touchstart' || e.type == 'touchend') {
                 for (i = 0; i < e.changedTouches.length; i++) {
-                    touch = e.changedTouches[i]
-                    x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
-                    y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
-                    if (y > game.maxY - unitWidth){
-                        if (x < 3*unitWidth || e.type === "touchend"){
-                            tC.oldTouchX = null
-                            tC.oldTouchY = null
-                        }                      
+                    let touch = e.changedTouches[i]
+                    let x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
+                    let y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
+                    if (y > game.maxY - unitWidth){                     
                         if (x > 3*unitWidth && x < 4 * unitWidth) {
                             game.keys['space'] = (e.type === "touchstart")
                         }

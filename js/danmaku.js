@@ -115,18 +115,18 @@ Danmaku_01 = new bulletml.Root({
             ]),
             bml_wait(120),
             bml_repeat(5, [
-                bml_fire(bml_speed(3.5), bml_bullet()),
-                bml_repeat(35, [
+                bml_fire(bml_speed(3.0), bml_bullet()),
+                bml_repeat(17, [
                     // bml_wait(1),
-                    bml_fire(bml_direction(10, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
+                    bml_fire(bml_direction(20, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
                 ]),
                 bml_wait(20)
             ]),
             bml_wait(120),
             bml_fire(bml_speed(1.5), bml_bullet()),
-            bml_repeat(200, [
-                bml_wait(1),
-                bml_fire(bml_direction(-11, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
+            bml_repeat(100, [
+                bml_wait(2),
+                bml_fire(bml_direction(-16, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
             ]),
             bml_wait(120)
         ]),
