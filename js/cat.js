@@ -9,8 +9,9 @@ const CatStep = function(dt){
         
     const gKeys = this.game.keys
     if (this.game.mobile){
-        this.vx = gKeys.touchDX * 100
-        this.vy = gKeys.touchDY * 100
+        const sensitivity = 100
+        this.vx = gKeys.touchDX * sensitivity
+        this.vy = gKeys.touchDY * sensitivity
     } else {
         if (gKeys.right)
             this.vx = this.maxVel

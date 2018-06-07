@@ -14,7 +14,8 @@ const CreateGame = (opts) => {
         })  
     }
     const DEBUG_MODE = options.debug || false
-    const KEY_CODES = { 
+    const KEY_CODES = {
+        13:"enter",
         32:"space", 
         37:"left", 
         38:"up", 
@@ -412,15 +413,37 @@ const CreateTouchControls = (game, spriteSheet) => {
     const unitWidth = game.maxX / 5
     const blockWidth = unitWidth - gutterWidth
 
-    const threshold = 25
+    const threshold = 20
 
     let tC = {
         init: () => {
             game.canvas.addEventListener('touchstart', tC.trackTouch, true)
-            game.canvas.addEventListener('touchend', tC.trackTouch, true)
+            game.canvas.addEventListener('touchend', (e)=>{
+                for (let i=0;i<e.changedTouches.length;++i){
+                    let touch = e.changedTouches[i]
+                    let x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
+                    let y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
+                    if (y < game.maxY - unitWidth || x < 3*unitWidth){
+                        tC.touches = null
+                        break
+                    }
+                }
+                tC.oldPx = null
+                tC.oldPy = null
+                tC.trackTouch(e)
+            }, true)
 
             game.canvas.addEventListener('touchmove', (e) => {
-                tC.touches = e.touches
+                // filters touches by location. basically, anywhere except our buttons is ok
+                for (let i=0;i<e.touches.length;++i){
+                    let touch = e.touches[i]
+                    let x = touch.pageX / game.canvasMultiplier - game.canvas.offsetLeft
+                    let y = touch.pageY / game.canvasMultiplier - game.canvas.offsetTop
+                    if (y < game.maxY - unitWidth || x < 3*unitWidth){
+                        tC.touches = touch
+                        break
+                    }
+                }
             }, true)
         
             // For Android
@@ -445,9 +468,14 @@ const CreateTouchControls = (game, spriteSheet) => {
         oldPx: null,
         oldPy: null,
         step: (dt) => {        
-            if(!tC.touches)
+            if(!tC.touches){
+                tC.oldPx = null
+                tC.oldPy = null
+                game.keys.touchDX = 0
+                game.keys.touchDY = 0
                 return
-            let touch = tC.touches[0];
+            }
+            let touch = tC.touches;
             let px = touch.pageX;
             let py = touch.pageY;
     
@@ -482,6 +510,8 @@ const CreateTouchControls = (game, spriteSheet) => {
                         if (x > 4 * unitWidth) {
                             game.keys['z'] = (e.type == 'touchstart')
                         }
+                    } else if (y < game.maxY - unitWidth && (game.gameOver || game.win || game.titleScreen)){
+                        game.keys["enter"] = (e.type === "touchstart")
                     }
                 }
             }

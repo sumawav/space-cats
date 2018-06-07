@@ -89,7 +89,7 @@ DEBUG_LEVEL = [
 ]
 
 var gameBoard
-const game = CreateGame({debug: false})
+const game = CreateGame({debug: true})
 const spriteSheet = CreateSpriteSheet()
 
 var cat
@@ -97,6 +97,7 @@ var danmakuConfig
 
 
 const startGame = () => {
+    game.titleScreen = true
     game.renderer.bkg(0.0, 0.0, 0.0)
     game.setBoard(0, CreateStarField(game, { 
         centerX: game.maxX/4,
@@ -106,7 +107,7 @@ const startGame = () => {
     game.setBoard(2, CreateMainTitle(
         game,
         "space cats",
-        "PRESS Z TO PLAY",
+        game.mobile ? "TOUCH HERE" : "PRESS ENTER",
         PlayGame
     ))
 
@@ -119,6 +120,7 @@ const startGame = () => {
 }
 
 const PlayGame = () => {
+    game.titleScreen = false
     game.gameOver = false
     game.sloMoFactor = 1
     gameBoard = CreateGameBoard(game)
@@ -130,7 +132,7 @@ const PlayGame = () => {
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
     // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5))
@@ -141,16 +143,17 @@ const GameOver = () => {
     game.setBoard(2, CreateMainTitle(
         game,
         "game over",
-        "PRESS Z TO PLAY",
+        game.mobile ? "PLAY AGAIN?": "PRESS ENTER TO PLAY",
         PlayGame,
     ))
 }
 
 const WinGame = () => {
+    game.win = true
     game.setBoard(2, CreateMainTitle(
         game,
         "you win!!",
-        "PRESS Z TO PLAY AGAIN",
+        game.mobile ? "PLAY AGAIN?": "PRESS ENTER TO PLAY",
         PlayGame
     ))
 }
