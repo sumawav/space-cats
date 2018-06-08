@@ -1,4 +1,4 @@
-let DrawHud = function() {
+const DrawHud = function() {
     let slm = this.cat.sloMoMeter
     let coarse = Math.floor(slm /this.size)
     let fine = (slm % this.size)
@@ -10,32 +10,17 @@ let DrawHud = function() {
             this.sprite, i*this.size, 0, this.size, 0xFF0000FF, false
         )
     }
-    if (this.numbersTex){
-        let scoreDigitLength = 0
-        this.game.gameScore.toString().split("").forEach((digit,i) => {
-            const frame = HUD[digit]
-            if (typeof frame === "undefined")
-                debugger
-            const u0 = frame.sx / this.numbersTex.width,
-            v0 = frame.sy / this.numbersTex.height,
-            u1 = u0 + (frame.w / this.numbersTex.width),
-            v1 = v0 + (frame.h / this.numbersTex.height)
-            this.game.renderer.img(
-                this.numbersTex,
-                scoreDigitLength, 5,
-                frame.w,
-                frame.h,
-                0,
-                0,0,
-                1,
-                1,
-                u0,v0,u1,v1
-            )
-            scoreDigitLength += frame.w + 1 
-        })
+    let scoreDigitLength = 0
+    this.dScore.toString().split("").forEach((digit) => {
+        this.numberSheet.draw(digit, scoreDigitLength, 5, 1, null, false)
+        scoreDigitLength += this.numberSheet.map[digit].w + 1
+    })
+}
 
+const StepHud = function(dt){
+    if (this.dScore < this.game.gameScore){
+        this.dScore++
     }
-
 }
 
 const HUD = {
@@ -57,27 +42,14 @@ let CreateHud = (game, spriteSheet, cat, size, props) => {
         .init(spriteSheet, "square")
 
     hud.size = size || 16
-    let c = document.createElement("canvas")
-    c.width = game.maxX
-    c.height = 40
-    const ctx = c.getContext("2d")
-    ctx.fillStyle = "#00FFFF"
-    ctx.textAlign = "left"
-    ctx.textBaseline = "top"
-    ctx.font = "normal bold 40px kremlin"
-    ctx.fillText("0123456789", 0, 0)
-    const cTexture = TCTex(game.gl, c, c.width, c.height)
-    // document.body.appendChild(c)
-    c = null
-
-    hud.numbersTex = cTexture
     hud.game = game
     hud.spriteSheet = spriteSheet
     hud.cat = cat
     hud.w = game.maxX
+    hud.dScore = 0;
     Object.assign(hud, props || {})
     Object.assign(hud, {
-        step: ()=>{},
+        step: StepHud,
         draw: DrawHud
     })
     return hud

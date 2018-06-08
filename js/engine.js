@@ -416,7 +416,6 @@ const CreateTouchControls = (game, spriteSheet) => {
     const gutterWidth = 10
     const unitWidth = game.maxX / 5
     const blockWidth = unitWidth - gutterWidth
-
     const threshold = 20
 
     let tC = {
@@ -462,7 +461,7 @@ const CreateTouchControls = (game, spriteSheet) => {
                 "square", x, y, blockWidth, tint, false
             )
         },
-        draw: (ctx) => {    
+        draw: () => {    
             var yLoc = game.height - unitWidth
             // tC.drawSquare(gutterWidth, yLoc, game.keys['left'])
             // tC.drawSquare(unitWidth + gutterWidth, yLoc, game.keys['right'])
@@ -471,7 +470,7 @@ const CreateTouchControls = (game, spriteSheet) => {
         },
         oldPx: null,
         oldPy: null,
-        step: (dt) => {        
+        step: () => {        
             if(!tC.touches){
                 tC.oldPx = null
                 tC.oldPy = null
