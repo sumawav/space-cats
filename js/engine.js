@@ -181,7 +181,7 @@ const CreateGame = (opts) => {
     return Object.assign(state)
 }
 
-const CreateSpriteSheet = () => {
+const CreateSpriteSheet = (filePath) => {
     let state = { map: {} }
 
     state = {
@@ -199,7 +199,7 @@ const CreateSpriteSheet = () => {
                 if (typeof callback === "function")
                     callback()
             }
-            image.src = "img/cats.png"
+            image.src = filePath || "img/cats.png"
         },
         draw: (sprite, x, y, scale, tint, center) => {
             scale = scale || 1
@@ -244,6 +244,9 @@ const CreateGameBoard = (game) => {
         game: game,
         objects: [],
         cnt: {},
+        score: (amount) => {
+            score = (parseInt(score) + amount).toString()
+        },
         add: (obj) => {
             obj.board = state
             state.objects.push(obj)

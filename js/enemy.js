@@ -50,6 +50,7 @@ const EnemyHit = function(damage, cat){
     if (this.health < 0){
         if (this.game.sloMoFactor === 1)
             cat.sloMoMeter += 5
+        this.board.score(this.points)
         this.board.remove(this)
         this.board.add(CreateExplosion(
             game, spriteSheet, this.x + this.w/2, this.y + this.h/2

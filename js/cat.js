@@ -107,7 +107,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.reloadTime = 0.10
     cat.spaceDown = true
     cat.reload = cat.reloadTime
-    cat.sloMoMeter = 100
+    cat.sloMoMeter = 0
     cat.type = OBJECT_PLAYER
 
     Object.assign(cat, props || {})

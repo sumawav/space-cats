@@ -13,6 +13,8 @@ const SPRITES = {
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
 
+let score = "0"
+
 // A Constant horizontal velocity
 // B Strength of horizontal sinusoidal velocity
 // C Period of horizontal sinusoidal velocity
@@ -27,38 +29,40 @@ const enemies = (type) => {
         case "straight": 
             text = { 
                 x: 0, y: -50, enemyType: "orange_cat", health: 2, 
-                E: 100 
+                E: 100, points: 10
             }
             break
         case "ltr": 
             text = { 
                 x: 0, y: -100, enemyType: "purple_cat", health: 2, 
-                B: 75, C: 1, E: 100, danmaku: 2
+                B: 75, C: 1, E: 100, danmaku: 2, points: 30
             }
             break
         case "circle": 
             text = { 
                 x: 250, y: -50, enemyType: "black_cat", health: 2, 
-                A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2 
+                A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2,
+                points: 10
             }
             break
         case "wiggle": 
             text = { 
                 x: 100, y: -50, enemyType: "cat", health: 2, 
-                B: 50, C: 4, E: 100, danmaku: 3
+                B: 50, C: 4, E: 100, danmaku: 3, points: 20
             }
             break
         case "step": 
             text = { 
                 x: 0, y: -50, enemyType: "cat", health: 2, 
-                B: 150, C: 1.2, E: 75
+                B: 150, C: 1.2, E: 75, points: 10
             }
             break
         case "still":
             let x = game ? game.maxX / 2 : 100
             let y = game ? game.maxY / 4: 100
             text = {
-                x: x, y: y, enemyType: "cat", health: 20, danmaku: 1
+                x: x, y: y, enemyType: "cat", health: 20, danmaku: 1,
+                score: 300
             }
         break
         default:
@@ -90,7 +94,7 @@ DEBUG_LEVEL = [
 
 var gameBoard
 const game = CreateGame({debug: false})
-const spriteSheet = CreateSpriteSheet()
+const spriteSheet = CreateSpriteSheet("img/cats.png")
 
 var cat
 var danmakuConfig
@@ -136,6 +140,8 @@ const PlayGame = () => {
     gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5))
+    
+    
 }
 
 const GameOver = () => {
@@ -159,8 +165,6 @@ const WinGame = () => {
 }
 
 const loadSprites = () => {
-
-
     spriteSheet.load(SPRITES, game.renderer, startGame)
 }
 
