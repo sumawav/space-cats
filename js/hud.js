@@ -11,9 +11,8 @@ let DrawHud = function() {
         )
     }
     if (this.numbersTex){
-        let thisScore = this.game.gameScore
         let scoreDigitLength = 0
-        thisScore.toString().split("").forEach((digit,i) => {
+        this.game.gameScore.toString().split("").forEach((digit,i) => {
             const frame = HUD[digit]
             if (typeof frame === "undefined")
                 debugger

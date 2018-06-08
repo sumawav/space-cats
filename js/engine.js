@@ -95,10 +95,9 @@ const CreateGame = (opts) => {
     state = {
         gameOver: false,
         sloMoFactor: 1,
-        gameScore: "0",
+        gameScore: 0,
         score: (amount) => {
-            console.log(amount)
-            state.gameScore = (parseInt(state.gameScore) + amount).toString()
+            state.gameScore += amount
         },
         initialize: (canvasElementId, callback) => {
             state.canvas = document.getElementById(canvasElementId);
