@@ -3,25 +3,27 @@ let DrawHud = function() {
     let coarse = Math.floor(slm /this.size)
     let fine = (slm % this.size)
     this.spriteSheet.draw(
-        this.sprite, coarse * this.size - (this.size - fine), this.game.maxY - this.size, this.size, 0xFF0000FF, false
+        this.sprite, coarse * this.size - (this.size - fine), 0, this.size, 0xFF0000FF, false
     )
     for (let i = 0; i < coarse; ++i) {
         this.spriteSheet.draw(
-            this.sprite, i*this.size, this.game.maxY - this.size, this.size, 0xFF0000FF, false
+            this.sprite, i*this.size, 0, this.size, 0xFF0000FF, false
         )
     }
     if (this.numbersTex){
-        let thisScore = score
+        let thisScore = this.game.gameScore
         let scoreDigitLength = 0
         thisScore.toString().split("").forEach((digit,i) => {
-            const frame = HUD[digit],
-            u0 = frame.sx / this.numbersTex.width,
+            const frame = HUD[digit]
+            if (typeof frame === "undefined")
+                debugger
+            const u0 = frame.sx / this.numbersTex.width,
             v0 = frame.sy / this.numbersTex.height,
             u1 = u0 + (frame.w / this.numbersTex.width),
             v1 = v0 + (frame.h / this.numbersTex.height)
             this.game.renderer.img(
                 this.numbersTex,
-                scoreDigitLength, this.game.maxY - 35,
+                scoreDigitLength, 5,
                 frame.w,
                 frame.h,
                 0,
@@ -47,8 +49,7 @@ const HUD = {
     6: { sx:155, sy: 6, w: 26, h: 30, frames: 1 },
     7: { sx:183, sy: 6, w: 25, h: 30, frames: 1 },
     8: { sx:211, sy: 6, w: 25, h: 30, frames: 1 },
-    9: { sx:239, sy: 6, w: 25, h: 30, frames: 1 },
-
+    9: { sx:239, sy: 6, w: 25, h: 30, frames: 1 }
 }
 
 let CreateHud = (game, spriteSheet, cat, size, props) => {

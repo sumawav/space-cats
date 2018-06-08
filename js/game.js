@@ -13,7 +13,7 @@ const SPRITES = {
     square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
 }
 
-let score = "0"
+
 
 // A Constant horizontal velocity
 // B Strength of horizontal sinusoidal velocity
@@ -62,7 +62,7 @@ const enemies = (type) => {
             let y = game ? game.maxY / 4: 100
             text = {
                 x: x, y: y, enemyType: "cat", health: 20, danmaku: 1,
-                score: 300
+                points: 300
             }
         break
         default:
