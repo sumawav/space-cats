@@ -59,7 +59,7 @@ const PING_PONG_PATTERN = [
     {
         ease: basicEasing,
         done: function() {
-            const target = nnBnn(this.game,6,12)
+            const target = nnBnn(this.game,6,12,null,randomInt(5,10))
             this.target_x = target.x
             this.target_y = target.y
             this.wait = 155        
