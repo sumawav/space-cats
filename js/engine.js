@@ -392,10 +392,10 @@ const LevelStep = function(dt){
         if (this.t > curShip[1]){
             remove.push(curShip)
         } else if (curShip[0] < this.t){
-            let enemyName = enemies(curShip[3])
+            let bluePrint = enemies(curShip[3])
             let override = curShip[4]
-            const enemy = CreateEnemy(this.game, this.spriteSheet, enemyName, override)
-            enemy.startup()
+            const enemy = CreateEnemy(this.game, this.spriteSheet, bluePrint, override)
+            // enemy.startup()
 
             this.board.add(enemy)
             curShip[0] += curShip[2]

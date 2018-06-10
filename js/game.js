@@ -29,54 +29,56 @@ const SPRITES = {
 // G Period of vertical sinusoidal velocity
 // H Time shift of vertical
 const enemies = (type) => {
-    let text = {}
+    let blueprint = {}
     switch(type){
         case "straight": 
-            text = { 
+            blueprint = { 
                 x: 0, y: -50, enemyType: "teal_cat", health: 2, 
-                E: 100, points: 17
+                E: 100, points: 17, patterns: { list: TEST_PATTERN3, ptr: 0 }
             }
             break
         case "ltr": 
-            text = { 
+            blueprint = { 
                 x: 0, y: -100, enemyType: "purple_cat", health: 2, 
-                B: 75, C: 1, E: 100, danmaku: 2, points: 37
+                B: 75, C: 1, E: 100, danmaku: 2, points: 37,
+                patterns: { list: TEST_PATTERN3, ptr: 0 }
             }
             break
         case "circle": 
-            text = { 
+            blueprint = { 
                 x: 250, y: -50, enemyType: "black_cat", health: 2, 
                 A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2,
-                points: 17
+                points: 17, patterns: { list: TEST_PATTERN3, ptr: 0 }
             }
             break
         case "wiggle": 
-            text = { 
+            blueprint = { 
                 x: 100, y: -50, enemyType: "red_orange_cat", health: 2, 
-                B: 50, C: 4, E: 100, danmaku: 3, points: 27
+                B: 50, C: 4, E: 100, danmaku: 3, points: 27, patterns: { list: TEST_PATTERN3, ptr: 0 }
             }
             break
         case "step": 
-            text = { 
+            blueprint = { 
                 x: 0, y: -50, enemyType: "gray_cat", health: 2, 
-                B: 150, C: 1.2, E: 75, points: 17
+                B: 150, C: 1.2, E: 75, points: 17, 
+                patterns: { list: TEST_PATTERN3, ptr: 0 }
             }
             break
         case "still":
             let x = game ? game.maxX / 2 : 100
             let y = game ? game.maxY / 4: 100
-            text = {
-                x: x, y: y, enemyType: "green_cat", health: 20, danmaku: 4,
-                points: 307
+            blueprint = {
+                x: x, y: y, enemyType: "green_cat", health: 20,
+                points: 307, patterns: { list: TEST_PATTERN2, ptr: 0}
             }
         break
         default:
-            text = {
+            blueprint = {
                 x: game ? game.maxX : 100, y: game ? game.maxY : 100, enemyType: "cat", health: 10, 
                 E: 75
             }
     }
-    return text
+    return blueprint
 };
 
 var level1 = [
@@ -145,8 +147,8 @@ const PlayGame = () => {
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
 
-    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
