@@ -238,6 +238,27 @@ const CreateSpriteSheet = (filePath) => {
                 v1                  // I hope that makes sense
             )
             state.renderer.col = colCache
+        },
+        drawVerbose: (x, y, scaleX, scaleY, tint, centerX, centerY, rot, u0, v0, u1, v1) => {
+
+            const colCache = state.renderer.col
+            if (tint)
+                state.renderer.col = tint
+            state.renderer.img(
+                state.texture,
+                centerX,       // initial rendering 
+                centerY,       // location before translation
+                frame.w, 
+                frame.h,
+                rot,                  // rotation
+                x, y,               // translation
+                scaleX,scaleY,        // scale (x, y)
+                u0,                 // These values are x, y, w, h
+                v0,                 // for the texture normalized
+                u1,                 // to [0-1]
+                v1                  // I hope that makes sense
+            )
+            state.renderer.col = colCache
         }
     }
     return Object.assign(state)
@@ -374,6 +395,8 @@ const LevelStep = function(dt){
             let enemyName = enemies(curShip[3])
             let override = curShip[4]
             const enemy = CreateEnemy(this.game, this.spriteSheet, enemyName, override)
+            enemy.startup()
+
             this.board.add(enemy)
             curShip[0] += curShip[2]
         }

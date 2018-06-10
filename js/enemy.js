@@ -7,24 +7,31 @@
 // G Period of vertical sinusoidal velocity
 // H Time shift of vertical
 const EnemyStep = function(dt){
-    this.t += dt
 
-    this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D)
-    this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H)
-  
-    this.x += this.vx * dt
-    this.y += this.vy * dt
+    if (this.altStep){
+        const pattern = this.patterns.list[this.patterns.ptr]
+        const done = pattern.ease.call(this, dt, this.target_x, this.target_y, this.wait)
+        if (done)
+            pattern.done.call(this)
+    } else {
+        this.t += dt
+        this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D)
+        this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H)
+      
+        this.x += this.vx * dt
+        this.y += this.vy * dt
+    }
 
     if (this.blink) {
         this.blinkTimer--
-        this.tint = 0xFFFFFFFF
+        this.sprite = this.originalSprite
         if (this.blinkTimer < 0)
             this.blink = false
-        else if (this.blinkTimer % 2 === 0)
-            this.tint = 0xFF0000FF
+        else if (this.blinkTimer % 4 === 0)
+            this.sprite = "blank_cat"
     }
 
-    if (this.runner){
+    if (this.runnerActive){
         this.runner.x = this.x + this.w/2
         this.runner.y = this.y + this.h/2
         this.runner.update(dt)
@@ -36,9 +43,7 @@ const EnemyStep = function(dt){
     if (collision) {
         collision.hit(this.damage)
         this.board.remove(this)
-    }
-
-    if (this.y > game.maxY || this.x < -this.w || this.x > game.maxX) {
+    } else if (this.y > game.maxY || this.x < -this.w || this.x > game.maxX) {
         this.board.remove(this)
     } else {
         this.bin = this.board.reportPosition(this)
@@ -57,10 +62,61 @@ const EnemyHit = function(damage, cat){
         ))        
     } else if(!this.blink) {
         this.blink = true
-        this.blinkTimer = 10
+        this.blinkTimer = 15
     }
 
 }
+
+const startup = function() {
+    this.target_x = randomRangeInt(this.game.maxX/2, 3*this.game.maxX/4)
+    this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
+    this.ease = 0.05
+    this.patterns.list = TEST_PATTERN
+    this.patterns.ptr = 0
+    this.altStep = true
+}
+
+const TEST_PATTERN = [
+    {
+        ease: basicEasing,
+        done: function(){
+            console.log("tick")
+            this.target_x = randomRangeInt(this.game.maxX/2, 3*this.game.maxX/4)
+            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
+            this.runner = createRunner(4, danmakuConfig)
+            this.wait = 200
+            this.patterns.ptr++
+        }
+    },
+    {
+        ease: basicWait,
+        done: function(){
+            console.log("tock")
+            this.runnerActive = false
+            this.patterns.ptr++
+        }
+    },
+    {
+        ease: basicEasing,
+        done: function(){
+            console.log("tick")
+            this.target_x = randomRangeInt(this.game.maxX/4, this.game.maxX/2)
+            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
+            this.runner = createRunner(2, danmakuConfig)
+            this.wait = 150
+            this.patterns.ptr++
+        }
+    },    
+    {
+        ease: basicWait,
+        done: function(){
+            console.log("tock")
+            this.runnerActive = false
+            this.patterns.ptr = 0
+        }
+    },
+]
+
 
 const CreateEnemy = function(game, spriteSheet, blueprint, override) {
     override = override || {}
@@ -72,20 +128,32 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         type: OBJECT_ENEMY,
         blink: false,
         blinkTimer: 0,
-        game: game
+        game: game,
+        patterns: {
+            list: [],
+            ptr: null
+        }
     }, blueprint, override)
     Object.assign(en, {
-        runner: createRunner(en.danmaku, danmakuConfig)
+        originalSprite: en.sprite
+    })
+    Object.assign(en, {
+        runner: createRunner(en.danmaku, danmakuConfig),
+        runnerActive: false
     })
     Object.assign(en, {
         draw: SpriteDraw,
         step: EnemyStep,
-        hit: EnemyHit
+        hit: EnemyHit,
+        startup: startup
     })
     return en
 }
 const createRunner = (danmaku, config) => {
     switch (danmaku){
+        case 4:
+            return Danmaku_04.createRunner(config)
+            break            
         case 3:
             return Danmaku_03.createRunner(config)
             break
@@ -96,6 +164,7 @@ const createRunner = (danmaku, config) => {
             return Danmaku_01.createRunner(config)
             break
         default:
-            return Danmaku_00.createRunner(config)
+            // return Danmaku_00.createRunner(config)
+            return null
     }
 }

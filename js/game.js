@@ -5,12 +5,17 @@ const OBJECT_PLAYER             = 1,
       OBJECT_POWERUP            = 16
 
 const SPRITES = {
-    cat:        { sx: 0, sy: 0, w: 32, h: 32, frames: 1 },
-    orange_cat: { sx: 0, sy:32, w: 32, h: 32, frames: 1 },
-    black_cat:  { sx: 0, sy:64, w: 32, h: 32, frames: 1 },
-    purple_cat: { sx: 0, sy:96, w: 32, h: 32, frames: 1 },
-    cat_missile:{ sx: 8, sy:32 + 8, w: 2, h:16, frames: 1 },
-    square:     { sx:16, sy: 0 +10, w: 1, h: 1, frames: 1 }
+    cat:           { sx: 0, sy: 0, w: 32, h: 32, frames: 1 },
+    orange_cat:    { sx: 0, sy: 32, w: 32, h: 32, frames: 1 },
+    black_cat:     { sx: 0, sy: 64, w: 32, h: 32, frames: 1 },
+    purple_cat:    { sx: 0, sy: 96, w: 32, h: 32, frames: 1 },
+    teal_cat:      { sx: 0, sy: 128, w: 32, h: 32, frames: 1 },
+    red_orange_cat:{ sx: 0, sy: 160, w: 32, h: 32, frames: 1 },
+    green_cat:     { sx: 0, sy: 192, w: 32, h: 32, frames: 1 },
+    gray_cat:      { sx: 0, sy: 224, w: 32, h: 32, frames: 1 },
+    blank_cat:     { sx: 0, sy: 256, w: 32, h: 32, frames: 1 },
+    cat_missile:{ sx: 8, sy: 40, w: 2, h:16, frames: 1 },
+    square:     { sx:16, sy: 10, w: 1, h: 1, frames: 1 }
 }
 
 
@@ -28,7 +33,7 @@ const enemies = (type) => {
     switch(type){
         case "straight": 
             text = { 
-                x: 0, y: -50, enemyType: "orange_cat", health: 2, 
+                x: 0, y: -50, enemyType: "teal_cat", health: 2, 
                 E: 100, points: 17
             }
             break
@@ -47,13 +52,13 @@ const enemies = (type) => {
             break
         case "wiggle": 
             text = { 
-                x: 100, y: -50, enemyType: "cat", health: 2, 
+                x: 100, y: -50, enemyType: "red_orange_cat", health: 2, 
                 B: 50, C: 4, E: 100, danmaku: 3, points: 27
             }
             break
         case "step": 
             text = { 
-                x: 0, y: -50, enemyType: "cat", health: 2, 
+                x: 0, y: -50, enemyType: "gray_cat", health: 2, 
                 B: 150, C: 1.2, E: 75, points: 17
             }
             break
@@ -61,7 +66,7 @@ const enemies = (type) => {
             let x = game ? game.maxX / 2 : 100
             let y = game ? game.maxY / 4: 100
             text = {
-                x: x, y: y, enemyType: "cat", health: 20, danmaku: 1,
+                x: x, y: y, enemyType: "green_cat", health: 20, danmaku: 4,
                 points: 307
             }
         break
@@ -139,8 +144,10 @@ const PlayGame = () => {
     gameBoard.add(cat)
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
-    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+
+    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
         dScore: 0

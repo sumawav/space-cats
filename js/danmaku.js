@@ -136,12 +136,12 @@ Danmaku_01 = new bulletml.Root({
 Danmaku_02 = new bulletml.Root({
     top: bml_action([
         bml_repeat(3, [
-            bml_wait(100),
             bml_fire(bml_speed(4.5), bml_bullet({ tint: 0xFF8888FF})),
             bml_repeat(5,[
                 bml_wait(5),
                 bml_fire(bml_speed(0, "sequence"), bml_direction(0, "sequence"), bml_bullet({ tint: 0xFF8888FF})),
-            ])
+            ]),
+            bml_wait(50)
         ]),
     ]),
 });
@@ -165,6 +165,21 @@ Danmaku_03 = new bulletml.Root({
                 ]),
                 bml_wait(50)
             ])
+        ]),
+    ]),
+});
+
+Danmaku_04 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(1, [
+            bml_repeat(5, [
+                bml_fire(bml_direction(0, "absolute"), bml_speed(1.5), bml_bullet()),
+                bml_repeat(17, [
+                    // bml_wait(1),
+                    bml_fire(bml_direction(20, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
+                ]),
+                bml_wait(10)
+            ]),
         ]),
     ]),
 });
