@@ -19,7 +19,10 @@ const DrawHud = function() {
 
 const StepHud = function(dt){
     if (this.dScore < this.game.gameScore){
-        this.dScore++
+        if ((this.game.gameScore - this.dScore) > 100){
+            this.dScore += 100
+        } else
+            this.dScore++
     }
 }
 

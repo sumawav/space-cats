@@ -74,6 +74,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         .init(spriteSheet, override.enemyType || blueprint.enemyType)   
     Object.assign(en, {
         A:0,B:0,C:0,D:0,E:0,F:0,G:0,H:0,t:0, // defaults
+        x:0,y:-en.h,
         type: OBJECT_ENEMY,
         blink: false,
         blinkTimer: 0,
@@ -88,7 +89,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         originalSprite: en.sprite
     })
     Object.assign(en, {
-        runners: createRunner(en.danmaku, danmakuConfig),
+        runner: createRunner(en.danmaku, danmakuConfig),
         armed: false
     })
     Object.assign(en, {

@@ -36,6 +36,66 @@ const cykodEasing = function(dt){
     this.x += this.vx * dt
     this.y += this.vy * dt
 }
+const CYKOD_PATTERN = [
+    {
+        done: function() {
+            this.armed = true
+            this.patterns.ptr++
+        }
+    },
+    {
+        ease: cykodEasing,
+        done: () => {}
+    }
+
+]
+
+const SNAKE_PATTERN = [
+    {   
+        done: function(){
+            this.x = 0
+            this.y = -100
+            this.target_x = 0
+            this.target_y = this.h
+            this.wait = 30
+            this.patterns.ptr++
+        }
+    },
+    {// slide down
+        ease: linearEasing,
+        done: function(){
+            this.target_x = this.game.maxX - this.w
+            this.target_y = this.y
+            this.wait = 90
+            this.patterns.ptr++
+        }
+    },
+    {//slide right
+        ease: linearEasing,
+        done: function(){
+            this.target_y += this.h
+            this.wait = 10
+            this.patterns.ptr++
+        }
+    },
+    {// slide down
+        ease: linearEasing,
+        done: function(){
+            this.target_x = 0
+            this.wait = 90
+            this.patterns.ptr++
+        }
+    },
+    {// slide left
+        ease: linearEasing,
+        done: function(){
+            this.target_y += this.h
+            this.wait = 10
+            this.patterns.ptr = 1
+        }
+    },
+]
+
 const PING_PONG_PATTERN = [
     {
         ease: basicEasing,
