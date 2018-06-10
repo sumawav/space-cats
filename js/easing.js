@@ -62,14 +62,14 @@ const PING_PONG_PATTERN = [
             const target = nnBnn(this.game,6,12)
             this.target_x = target.x
             this.target_y = target.y
-            this.wait = 305        
+            this.wait = 155        
             this.patterns.ptr++
         }
     },
     {
         ease: attackWait,
         done: function() {
-            this.armed = false
+            // this.armed = false
             this.patterns.ptr=0
         }
     },
