@@ -45,8 +45,8 @@ const CreateExplosion = (game, spriteSheet, x, y, props) => {
     exp.centerY = y
 
     const generateAngles = (min, max) => {
-        return Array(randomRangeInt(min,max)).fill().map(() => {
-            return randomRangeInt(0, 2*Math.PI*1000) / 1000
+        return Array(randomInt(min,max)).fill().map(() => {
+            return randomInt(0, 2*Math.PI*1000) / 1000
         })        
     }
     exp.layers = [
@@ -76,7 +76,7 @@ const CreateExplosion = (game, spriteSheet, x, y, props) => {
         layer.pairs = layer.thetas.map((e) => {
             const vx = Math.cos(e),
                   vy = Math.sin(e),
-                  initialSpread = randomRangeInt(0,20)
+                  initialSpread = randomInt(0,20)
             return {
                 x: exp.centerX + initialSpread*vx,
                 y: exp.centerY + initialSpread*vy,

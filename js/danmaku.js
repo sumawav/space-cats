@@ -168,7 +168,7 @@ Danmaku_03 = new bulletml.Root({
         ]),
     ]),
 });
-
+// 50 frames
 Danmaku_04 = new bulletml.Root({
     top: bml_action([
         bml_repeat(1, [
@@ -183,7 +183,7 @@ Danmaku_04 = new bulletml.Root({
         ]),
     ]),
 });
-
+// 240 frames
 Danmaku_05 = new bulletml.Root({
     top: bml_action([
         bml_repeat(6, [

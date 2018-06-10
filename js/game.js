@@ -71,6 +71,14 @@ const enemies = (type) => {
                 x: x, y: y, enemyType: "green_cat", health: 20,
                 points: 307, patterns: { list: TEST_PATTERN2, ptr: 0}
             }
+        case "pingpong":
+            blueprint = {
+                x: game ? game.maxX / 2 : 100, 
+                y: game ? game.maxY / 4: 100, 
+                enemyType: "red_orange_cat", health: 40,
+                points: 69420, 
+                patterns: { list: PING_PONG_PATTERN, ptr: 0 }
+            }
         break
         default:
             blueprint = {
@@ -96,7 +104,7 @@ var level1 = [
 ];
 
 DEBUG_LEVEL = [
-    [0, 300, 500, "still"]
+    [0, 300, 500, "pingpong"]
 ]
 
 var gameBoard
@@ -147,8 +155,8 @@ const PlayGame = () => {
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
 
-    // gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
+    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,

@@ -1,4 +1,4 @@
-const randomRangeInt = (minVal,maxVal) => {
+const randomInt = (minVal,maxVal) => {
     return Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
 }
 
@@ -14,30 +14,22 @@ const createHexColor = (red, green, blue, alpha) => {
 const closeEnough = (a,b) => {
     return (Math.abs(b-a) < 0.9)
 }
-
-// easing functions
-const basicEasing = function(dt){
-    const vx = (this.target_x - this.x) * this.ease,
-        vy = (this.target_y - this.y) * this.ease
-        this.x += vx * dt * 60
-        this.y += vy * dt * 60
-        return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
-}
-const linearEasing = function(dt){
-    this.wait -= dt * 60
-    const vx = (this.target_x - this.x)/this.wait
-    const vy = (this.target_y - this.y)/this.wait
-    this.x += vx * dt * 60
-    this.y += vy * dt * 60
-    return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
-}
-const attackWait = function(dt){
-    this.wait -= dt * 60
-    this.runnerActive = true
-    return this.wait < 0
-}
-const stillWait = function(dt){
-    this.wait -= dt * 60
-    this.runnerActive = false
-    return this.wait < 0
+// this returns random coordinates
+// at section (n3, n4) f grid created 
+// after board is split into n1 x  n2 grid
+const nnBnn = (game, n1, n2, n3, n4) => {
+    n3 = n3 || randomInt(0,n1-1)
+    n4 = n4 || randomInt(0,n2-1)
+    let bin_w = game.maxX / n1
+    let bin_h = game.maxY / n2
+    return {
+        x: randomInt(
+            Math.floor(bin_w * n3), 
+            Math.floor(bin_w * (n3 + 1))
+        ),
+        y: randomInt(
+            Math.floor(bin_h * n4),
+            Math.floor(bin_h * (n4 + 1)),
+        ),
+    }
 }

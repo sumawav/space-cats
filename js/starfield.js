@@ -11,9 +11,9 @@ const CreateStarField = (game, opt) => {
 
     for (let i = 0; i < options.count; ++i){
         stars[i] = {
-            x: randomRangeInt(-25,25),
-            y: randomRangeInt(-25,25),
-            z: randomRangeInt(0, options.depth)
+            x: randomInt(-25,25),
+            y: randomInt(-25,25),
+            z: randomInt(0, options.depth)
         }
     }
 
@@ -38,8 +38,8 @@ const CreateStarField = (game, opt) => {
                 star.z -= state.speed * dt
                 if (star.z <= 0)
                     star = {
-                        x: randomRangeInt(-25,25),
-                        y: randomRangeInt(-25,25),
+                        x: randomInt(-25,25),
+                        y: randomInt(-25,25),
                         z: state.depth
                     }
                 let k = state.density / star.z

@@ -8,7 +8,7 @@
 // H Time shift of vertical
 const EnemyStep = function(dt){    
     const pattern = this.patterns.list[this.patterns.ptr]
-    const done = pattern.ease.call(this, dt)
+    const done = !pattern.ease ? true : pattern.ease.call(this, dt)
     if (done)
         pattern.done.call(this)
 
@@ -27,11 +27,11 @@ const EnemyStep = function(dt){
         this.sprite = this.originalSprite
         if (this.blinkTimer < 0)
             this.blink = false
-        else if (this.blinkTimer % 4 === 0)
+        else if (this.blinkTimer % 3 === 0)
             this.sprite = "blank_cat"
     }
 
-    if (this.runnerActive){
+    if (this.armed){
         this.runner.x = this.x + this.w/2
         this.runner.y = this.y + this.h/2
         this.runner.update(dt)
@@ -67,161 +67,6 @@ const EnemyHit = function(damage, cat){
 
 }
 
-const TEST_PATTERN3 = [
-    {
-        ease: function(){
-            this.x = randomRangeInt(0, this.game.maxX - this.w)
-            this.y = -this.h
-            this.target_x = this.x
-            this.target_y = this.game.maxY + 5
-            return true
-        },
-        done: function(){
-            this.patterns.ptr++
-            this.wait = 300
-            this.runner = createRunner(0, danmakuConfig)
-            this.runnerActive = true
-        },
-    },
-    {
-        ease: linearEasing,
-        done: function(){
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: ()=>{}
-    }
-]
-
-const TEST_PATTERN = [
-    {
-        ease: function(){
-            this.target_x = 0
-            this.target_y = 0
-            return true
-        },
-        done: function(){
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: basicEasing,
-        done: function(){
-            console.log("tick")
-            this.target_x = randomRangeInt(this.game.maxX/2, 3*this.game.maxX/4)
-            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
-            this.runner = createRunner(4, danmakuConfig)
-            this.wait = 200
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: attackWait,
-        done: function(){
-            console.log("tock")
-            this.runnerActive = false
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: basicEasing,
-        done: function(){
-            console.log("tick")
-            this.target_x = randomRangeInt(this.game.maxX/4, this.game.maxX/2)
-            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
-            this.runner = createRunner(2, danmakuConfig)
-            this.wait = 150
-            this.patterns.ptr++
-        }
-    },    
-    {
-        ease: attackWait,
-        done: function(){
-            console.log("tock")
-            this.runnerActive = false
-            this.patterns.ptr = 1
-        }
-    },
-]
-
-const TEST_PATTERN2 = [
-    {
-        ease: function(){
-            this.target_x = 0
-            this.target_y = 0
-            return true
-        },
-        done: function(){
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: basicEasing,
-        done: function(){
-            this.target_x = this.game.maxX - this.w
-            this.target_y = 0
-            this.runner = createRunner(5, danmakuConfig)
-            this.wait = 205
-            this.runnerActive = true
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: function(dt){
-            this.wait -= dt * 60
-            const vx = (this.target_x - this.x)/this.wait
-            this.x += vx * dt * 60
-            return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
-        },
-        done: function(){
-            this.wait = 30
-            this.runnerActive = false
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: stillWait,
-        done: function(){      
-            this.target_x = randomRangeInt(this.game.maxX/4, this.game.maxX/2)
-            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
-            this.runner = createRunner(4, danmakuConfig)      
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: basicEasing,
-        done: function(){            
-            this.wait = 150
-            this.patterns.ptr++
-        }
-    },    
-    {
-        ease: attackWait,
-        done: function(){
-            this.runnerActive = false
-            this.target_x = randomRangeInt(this.game.maxX/2, 3*this.game.maxX/4)
-            this.target_y = randomRangeInt(0.1*this.game.maxY, 0.2*this.game.maxY)
-            this.runner = createRunner(2, danmakuConfig)               
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: basicEasing,
-        done: function(){         
-            this.wait = 150
-            this.patterns.ptr++
-        }
-    },
-    {
-        ease: attackWait,
-        done: function(){
-            this.runnerActive = false
-            this.patterns.ptr = 0
-        }
-    },
-]
-
 const CreateEnemy = function(game, spriteSheet, blueprint, override) {
     override = override || {}
     let en = Object
@@ -244,7 +89,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
     })
     Object.assign(en, {
         runners: createRunner(en.danmaku, danmakuConfig),
-        runnerActive: false
+        armed: false
     })
     Object.assign(en, {
         draw: SpriteDraw,
