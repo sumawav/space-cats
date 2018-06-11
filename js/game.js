@@ -67,7 +67,8 @@ const PlayGame = () => {
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
 
-    gameBoard.add(CreateLevel(game, spriteSheet, GetLevel(game, config.level, {offset: game.maxY/4}), WinGame))
+    let randLevel = ["STICKY_SITUATION", "EXAMPLE_LEVEL", "HERDING_CATS"][randomInt(0,2)]
+    gameBoard.add(CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
