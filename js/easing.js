@@ -12,11 +12,18 @@ const basicEasing = function(dt){
 }
 const linearEasing = function(dt){
     this.wait -= dt * 60
+    if (this.wait <= 0){
+        this.x = this.target_x
+        this.y = this.target_y
+        return true
+    }
     const vx = (this.target_x - this.x)/this.wait
     const vy = (this.target_y - this.y)/this.wait
     this.x += vx * dt * 60
     this.y += vy * dt * 60
-    return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
+    // return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
+    return false
+
 }
 const attackWait = function(dt){
     this.wait -= dt * 60
@@ -47,7 +54,6 @@ const CYKOD_PATTERN = [
         ease: cykodEasing,
         done: () => {}
     }
-
 ]
 
 const SNAKE_PATTERN = [
@@ -59,6 +65,7 @@ const SNAKE_PATTERN = [
             this.target_y = this.h
             this.wait = 30
             this.patterns.ptr++
+            this.sprite = "green_cat"
         }
     },
     {// slide down

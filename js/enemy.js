@@ -12,23 +12,17 @@ const EnemyStep = function(dt){
     if (done)
         pattern.done.call(this)
 
-    // i'd like to hold on to this
-    if(0){
-        this.t += dt
-        this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D)
-        this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H)
-        
-        this.x += this.vx * dt
-        this.y += this.vy * dt
-    }
 
     if (this.blink) {
         this.blinkTimer--
-        this.sprite = this.originalSprite
+        this.sprite = this.spriteCache || this.sprite
         if (this.blinkTimer < 0)
             this.blink = false
-        else if (this.blinkTimer % 3 === 0)
+        else if (this.blinkTimer % 3 === 0){
+            this.spriteCache = this.sprite
             this.sprite = "blank_cat"
+        }
+            
     }
 
     if (this.armed){
@@ -53,8 +47,7 @@ const EnemyStep = function(dt){
 const EnemyHit = function(damage, cat){
     this.health -= damage
     if (this.health < 0){
-        if (this.game.sloMoFactor === 1)
-            cat.sloMoMeter += 5
+        cat.sloMoMeter += 5
         this.game.score(this.points)
         this.board.remove(this)
         this.board.add(CreateExplosion(
@@ -85,9 +78,6 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         },
         ease: 0.05
     }, blueprint, override)
-    Object.assign(en, {
-        originalSprite: en.sprite
-    })
     Object.assign(en, {
         runner: createRunner(en.danmaku, danmakuConfig),
         armed: false

@@ -83,7 +83,7 @@ const enemies = (type) => {
             blueprint = {
                 x: game ? game.maxX / 2 : 100, 
                 y: game ? game.maxY / 4: 100, 
-                enemyType: "red_orange_cat", health: 30,
+                enemyType: "red_orange_cat", health: 20,
                 points: 11111, 
                 patterns: { list: PING_PONG_PATTERN, ptr: 0 }
             }
@@ -118,8 +118,8 @@ var level1 = [
 ];
 
 DEBUG_LEVEL = [
-    [0, 8000,  125, 'snake', { x: 100, y: -100} ],
-    [8000, 8500, 500, "pingpong"]
+    [0, 500, 500, "pingpong"],
+    [7000, 15000,  125, 'snake', { x: 100, y: -100} ],
 ]
 
 
