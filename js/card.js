@@ -14,6 +14,17 @@ const CardDraw = function() {
     )        
 }
 const CardStep = function(dt) {
+    if (this.rot > Math.PI/40)
+        this.rotationDir = false
+    if (this.rot < -Math.PI/40)
+        this.rotationDir = true
+    this.rot += this.rotationDir ? .00009 : -.00009
+    if (this.scale > 1.05)
+        this.scaleDir = false
+    if (this.scale < .95)
+        this.scaleDir = true
+    this.scale += this.scaleDir ? .0001 : -.0001
+    
     if (!this.game.keys["enter"])
         this.up = true
     if (this.up && this.game.keys["enter"]) {
@@ -50,30 +61,67 @@ const Card = {
         return this
     }
 }
+
+const CreateCard = (game, title, subtitle, callback) => {
+    let card = Object
+        .create(Card)
+        .init(game, title, subtitle, callback)
+
+    card.x = game.maxX/2
+    card.y = game.maxY/4
+    Object.assign(card, {
+        draw: CardDraw,
+        step: CardStep,
+    })
+    return card
+    
+}
+
+const MainTitleDraw = function() {
+    var cacheCol = this.game.renderer.col
+    for(let i = 5; i > 0; i--){
+        this.game.renderer.col = createHexColor(255,255,255,120 - i*20)
+        this.game.renderer.img(
+            this.tex,
+            -this.tex.width/2,
+            -this.tex.height/2,
+            this.tex.width,
+            this.tex.height,
+            this.rot * i,
+            this.x, //x
+            this.y, //y
+            this.scale + this.scale * i * 0.2,
+            this.scale + this.scale * i * 0.2,
+            0,0,1,1
+        )        
+    }
+    this.game.renderer.col = cacheCol
+    this.game.renderer.img(
+        this.tex,
+        -this.tex.width/2,
+        -this.tex.height/2,
+        this.tex.width,
+        this.tex.height,
+        this.rot,
+        this.x, //x
+        this.y, //y
+        this.scale + 0.1,
+        this.scale + 0.1,
+        0,0,1,1
+    ) 
+}
+
 const MainTitleStep = function(dt) {
-    // if (this.y >= (this.game.maxY - this.tex.height/4))   
-    //     this.scrollYDirection = false
-    // if (this.y <= 0 + this.tex.height/4)           
-    //     this.scrollYDirection = true
-    // if (this.x >= this.game.maxX - this.tex.width/4)   
-    //     this.scrollXDirection = false
-    // if (this.x <= 0 + this.tex.width/4)           
-    //     this.scrollXDirection = true
     if (this.rot > Math.PI/40)
         this.rotationDir = false
     if (this.rot < -Math.PI/40)
         this.rotationDir = true
     this.rot += this.rotationDir ? .00009 : -.00009
-
     if (this.scale > 1.05)
         this.scaleDir = false
     if (this.scale < .95)
         this.scaleDir = true
     this.scale += this.scaleDir ? .0001 : -.0001
-    // let dY = this.scrollYDirection ? 6 : -4
-    // let dX = this.scrollXDirection ? 7 : -8 
-    // this.y += dY/2
-    // this.x += dX/2
 
     if (!this.game.keys["enter"])
         this.up = true
@@ -90,8 +138,11 @@ const CreateMainTitle = (game, title, subtitle, callback) => {
     card.x = game.maxX/2
     card.y = game.maxY/4
 
+    const rotRange = Math.floor(PI*10000/40)
+    card.rot = randomInt(-rotRange,rotRange)/10000
+
     Object.assign(card, {
-        draw: CardDraw,
+        draw: MainTitleDraw,
         step: MainTitleStep,
     })
     return card

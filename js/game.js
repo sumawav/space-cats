@@ -1,5 +1,5 @@
 var gameBoard
-const game = CreateGame({debug: true})
+const game = CreateGame({debug: config.debugMode})
 const spriteSheet = CreateSpriteSheet("img/cats.png")
 const numberSheet = CreateSpriteSheet("img/download.png")
 const PI = Math.PI
@@ -79,7 +79,7 @@ const PlayGame = () => {
 
 const GameOver = () => {
     game.gameOver = true
-    game.setBoard(2, CreateMainTitle(
+    game.setBoard(2, CreateCard(
         game,
         "game over",
         game.mobile ? "PLAY AGAIN?": "PRESS ENTER TO PLAY",
@@ -89,7 +89,7 @@ const GameOver = () => {
 
 const WinGame = () => {
     game.win = true
-    game.setBoard(2, CreateMainTitle(
+    game.setBoard(2, CreateCard(
         game,
         "you win!!",
         game.mobile ? "PLAY AGAIN?": "PRESS ENTER TO PLAY",
