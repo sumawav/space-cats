@@ -18,8 +18,8 @@ const closeEnough = (a,b) => {
 // at section (n3, n4) f grid created 
 // after board is split into n1 x  n2 grid
 const nnBnn = (game, n1, n2, n3, n4) => {
-    n3 = n3 || randomInt(0,n1-1)
-    n4 = n4 || randomInt(0,n2-1)
+    n3 = n3 === "random" ? randomInt(0,n1-1) : n3
+    n4 = n4 === "random" ? randomInt(0,n2-1) : n4
     let bin_w = game.maxX / n1
     let bin_h = game.maxY / n2
     return {

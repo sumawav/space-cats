@@ -1,36 +1,33 @@
-// A Constant horizontal velocity
-// B Strength of horizontal sinusoidal velocity
-// C Period of horizontal sinusoidal velocity
-// D Time shift of horizontal sinusoidal velocity
-// E Constant vertical velocity
-// F Strength of vertical sinusoidal velocity
-// G Period of vertical sinusoidal velocity
-// H Time shift of vertical
+
 const EnemyStep = function(dt){    
     const pattern = this.patterns.list[this.patterns.ptr]
+    if (!pattern)
+        debugger
     const done = !pattern.ease ? true : pattern.ease.call(this, dt)
     if (done)
         pattern.done.call(this)
 
-
     if (this.blink) {
         this.blinkTimer--
         this.sprite = this.spriteCache || this.sprite
-        if (this.blinkTimer < 0)
+        this.tint = this.tintCache || this.tint
+        if (this.blinkTimer < 0){
             this.blink = false
-        else if (this.blinkTimer % 3 === 0){
+        } else if (this.blinkTimer % 3 === 0){
             this.spriteCache = this.sprite
             this.sprite = "blank_cat"
+            // tint is 0xAlpha Blue Green Red
+            this.tintCache = this.tint
+            this.tint = 0xFFD8FF00
         }
-            
     }
 
-    if (this.armed){
+    if (this.armed && this.runner){
         this.runner.x = this.x + this.w/2
         this.runner.y = this.y + this.h/2
         this.runner.update(dt)
     }
-    // const collision = this.board.collide(this, OBJECT_PLAYER)
+    
     const collision = (this.bin && this.bin.length > 1) ? 
                       this.board.binCollide(this, OBJECT_PLAYER) : 
                       false
@@ -46,7 +43,7 @@ const EnemyStep = function(dt){
 
 const EnemyHit = function(damage, cat){
     this.health -= damage
-    if (this.health < 0){
+    if (this.health < 1){
         cat.sloMoMeter += 5
         this.game.score(this.points)
         this.board.remove(this)
@@ -70,6 +67,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
         x:0,y:-en.h,
         type: OBJECT_ENEMY,
         blink: false,
+        tint: 0xFFFFFFFF,
         blinkTimer: 0,
         game: game,
         patterns: {
@@ -107,7 +105,10 @@ const createRunner = (danmaku, config) => {
         case 1:
             return Danmaku_01.createRunner(config)
             break
-        default:
+        case 0:
             return Danmaku_00.createRunner(config)
+            break
+        default:
+            return null
     }
 }

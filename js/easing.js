@@ -35,11 +35,19 @@ const stillWait = function(dt){
     this.armed = false
     return this.wait < 0
 }
+// A Constant horizontal velocity
+// B Strength of horizontal sinusoidal velocity
+// C Period of horizontal sinusoidal velocity
+// D Time shift of horizontal sinusoidal velocity
+// E Constant vertical velocity
+// F Strength of vertical sinusoidal velocity
+// G Period of vertical sinusoidal velocity
+// H Time shift of vertical
 const cykodEasing = function(dt){
     this.t += dt
     this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D)
     this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H)
-    
+
     this.x += this.vx * dt
     this.y += this.vy * dt
 }
@@ -55,6 +63,22 @@ const CYKOD_PATTERN = [
         done: () => {}
     }
 ]
+
+// const LEFT_UP_RIGHT_TOSS = [
+//     {
+//         done: function(){
+//             this.x = -this.w
+//             this.y = nnBnn(this.game, 16, 16, 0, 6).y
+//             this.target_y = this.y
+//             this.target_x = this.game.maxX + 5
+//             this.patterns.ptr++
+//         }
+//     },{
+//         ease: cykodEasing,
+//         done: ()=>{}
+//     }
+
+// ]
 
 const SNAKE_PATTERN = [
     {   
@@ -74,6 +98,7 @@ const SNAKE_PATTERN = [
             this.target_x = this.game.maxX - this.w
             this.target_y = this.y
             this.wait = 90
+            this.armed = true
             this.patterns.ptr++
         }
     },
@@ -82,6 +107,7 @@ const SNAKE_PATTERN = [
         done: function(){
             this.target_y += this.h
             this.wait = 10
+            this.armed = false
             this.patterns.ptr++
         }
     },
@@ -90,6 +116,7 @@ const SNAKE_PATTERN = [
         done: function(){
             this.target_x = 0
             this.wait = 90
+            this.armed = true
             this.patterns.ptr++
         }
     },

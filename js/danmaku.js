@@ -97,8 +97,8 @@ bulletml.dsl("bml_");
 Danmaku_00 = new bulletml.Root({
     top: bml_action([
         bml_repeat(10, [
-            bml_wait("100 + $rand * 100"),
-            bml_fire(bml_speed(2.5), bml_bullet())
+            bml_wait("240+ $rand * 240"),
+            bml_fire(bml_speed(1.5), bml_bullet())
         ]),
     ]),
 });

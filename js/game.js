@@ -1,9 +1,8 @@
 var gameBoard
-const game = CreateGame({debug: false})
+const game = CreateGame({debug: true})
 const spriteSheet = CreateSpriteSheet("img/cats.png")
 const numberSheet = CreateSpriteSheet("img/download.png")
-
-
+const PI = Math.PI
 const OBJECT_PLAYER             = 1,
       OBJECT_PLAYER_PROJECTILE  = 2,
       OBJECT_ENEMY              = 4,
@@ -26,109 +25,11 @@ const SPRITES = {
 
 
 
-// A Constant horizontal velocity
-// B Strength of horizontal sinusoidal velocity
-// C Period of horizontal sinusoidal velocity
-// D Time shift of horizontal sinusoidal velocity
-// E Constant vertical velocity
-// F Strength of vertical sinusoidal velocity
-// G Period of vertical sinusoidal velocity
-// H Time shift of vertical
-const enemies = (type) => {
-    let blueprint = {}
-    switch(type){
-        case "straight": 
-            blueprint = { 
-                x: 0, y: -50, enemyType: "teal_cat", health: 2, 
-                E: 100, points: 17, patterns: { list: CYKOD_PATTERN, ptr: 0 }
-            }
-            break
-        case "ltr": 
-            blueprint = { 
-                x: 0, y: -100, enemyType: "purple_cat", health: 2, 
-                B: 75, C: 1, E: 100, danmaku: 2, points: 37,
-                patterns: { list: CYKOD_PATTERN, ptr: 0 }
-            }
-            break
-        case "circle": 
-            blueprint = { 
-                x: 250, y: -50, enemyType: "black_cat", health: 2, 
-                A: 0, B: -100, C: 1, E: 20, F: 100, G: 1, H: Math.PI/2,
-                points: 17, patterns: { list: CYKOD_PATTERN, ptr: 0 }
-            }
-            break
-        case "wiggle": 
-            blueprint = { 
-                x: 100, y: -50, enemyType: "red_orange_cat", health: 2, 
-                B: 50, C: 4, E: 100, danmaku: 3, points: 27, 
-                patterns: { list: CYKOD_PATTERN, ptr: 0 }
-            }
-            break
-        case "step": 
-            blueprint = { 
-                x: 0, y: -50, enemyType: "gray_cat", health: 2, 
-                B: 150, C: 1.2, E: 75, points: 17, danmaku: 0,
-                patterns: { list: CYKOD_PATTERN, ptr: 0 }
-            }
-            break
-        case "still":
-            let x = game ? game.maxX / 2 : 100
-            let y = game ? game.maxY / 4: 100
-            blueprint = {
-                x: x, y: y, enemyType: "green_cat", health: 20,
-                points: 307, patterns: { list: TEST_PATTERN2, ptr: 0}
-            }
-            break
-        case "pingpong":
-            blueprint = {
-                x: game ? game.maxX / 2 : 100, 
-                y: game ? game.maxY / 4: 100, 
-                enemyType: "red_orange_cat", health: 20,
-                points: 11111, 
-                patterns: { list: PING_PONG_PATTERN, ptr: 0 }
-            }
-            break
-        case "snake":
-            blueprint = {
-                enemyType: "purple_cat", health: 2, points: 7,
-                patterns: { list: SNAKE_PATTERN, ptr: 0 }
-            }
-            break
-        default:
-            blueprint = {
-                x: game ? game.maxX : 100, y: game ? game.maxY : 100, enemyType: "cat", health: 10, 
-                E: 75
-            }
-    }
-    return blueprint
-};
-
-var level1 = [
-    // Start,   End, Gap,  Type,   Override
-    [ 0,      4000,  500, 'step' ],
-    [ 6000,   13000, 800, 'ltr' ],
-    [ 10000,  16000, 400, 'circle' ],
-    [ 17800,  20000, 500, 'straight', { x: 50 } ],
-    [ 18200,  20000, 500, 'straight', { x: 90 } ],
-    [ 18200,  20000, 500, 'straight', { x: 10 } ],
-    [ 22000,  25000, 400, 'wiggle', { x: 150 }],
-    [ 22000,  25000, 400, 'wiggle', { x: 100 }],
-    [ 26000,  26500, 500, "still"]
-    // [ 26000,  27000, 500, ]
-];
-
-DEBUG_LEVEL = [
-    [0, 500, 500, "pingpong"],
-    [7000, 15000,  125, 'snake', { x: 100, y: -100} ],
-]
-
-
-
 var cat
 var danmakuConfig
 
-
 const startGame = () => {
+
     game.titleScreen = true
     game.renderer.bkg(0.0, 0.0, 0.0)
     game.setBoard(0, CreateStarField(game, { 
@@ -151,7 +52,7 @@ const startGame = () => {
 }
 
 const PlayGame = () => {
-    game.gameScore = 58309
+    game.gameScore = 0
     game.titleScreen = false
     game.gameOver = false
     game.sloMoFactor = 1
@@ -166,8 +67,7 @@ const PlayGame = () => {
     game.setBoard(1, gameBoard)
     game.removeBoard(2)
 
-    gameBoard.add(CreateLevel(game, spriteSheet, DEBUG_LEVEL, WinGame))
-    // gameBoard.add(CreateLevel(game, spriteSheet, level1, WinGame))
+    gameBoard.add(CreateLevel(game, spriteSheet, GetLevel(game, config.level, {offset: game.maxY/4}), WinGame))
 
     game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
