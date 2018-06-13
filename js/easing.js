@@ -89,7 +89,6 @@ const SNAKE_PATTERN = [
             this.target_y = this.h
             this.wait = 30
             this.patterns.ptr++
-            this.sprite = "green_cat"
         }
     },
     {// slide down

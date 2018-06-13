@@ -28,25 +28,33 @@ const CatStep = function(dt){
     }
 
     // shoot
-    if (gKeys.z && !this.zDown && this.reload < 0) {
-        // console.log("Z DOWN")
-        this.reload = this.reloadTime
-        let cmL = CreateCatMissile(
-            game, spriteSheet, this.x, this.y,
-            { cat: this }
-        )
-        let cmR = CreateCatMissile(
-            game, spriteSheet, this.x+this.w, this.y,
-            { cat: this }
-        )
-        this.board.add(cmL)
-        this.board.add(cmR)
-
+    if (gKeys.z && !this.zDown) {
+        console.log("Z DOWN")
+        
+        this.fireFrame = 0
         this.zDown = true
     } else if (!gKeys.z && this.zDown){
-        // console.log("Z UP")
+        console.log("Z UP")
         this.zDown = false
     }
+
+    if (this.zDown){
+        if (Math.floor(this.fireFrame) % 6 === 0){
+            shot_sound.play()
+            let cmL = CreateCatMissile(
+                game, spriteSheet, this.x, this.y,
+                { cat: this }
+            )
+            let cmR = CreateCatMissile(
+                game, spriteSheet, this.x+this.w, this.y,
+                { cat: this }
+            )
+            this.board.add(cmL)
+            this.board.add(cmR)
+        }
+        this.fireFrame += dt * 60
+    }
+
     // text explosion
     if (gKeys.q && !this.qDown){
         this.board.add(CreateExplosion(
@@ -68,9 +76,12 @@ const CatStep = function(dt){
         this.spaceDown = false
     }
 
+    let firingWeaponPenalty = this.zDown ? 0.3 : 1
 
-    this.x += this.vx * dt /* * this.game.sloMoFactor */
-    this.y += this.vy * dt /* * this.game.sloMoFactor */
+    firingWeaponPenalty = 1
+
+    this.x += this.vx * dt * firingWeaponPenalty
+    this.y += this.vy * dt * firingWeaponPenalty
 
     if (this.x < 0)
         this.x = 0
@@ -104,7 +115,7 @@ const CreateCat = (game, spriteSheet, catType, props) => {
     cat.game = game
     cat.x = game.maxX/2 - cat.w/2
     cat.y = game.maxY - game.playerOffset - cat.h
-    cat.reloadTime = 0.10
+    cat.reloadTime = 0.000
     cat.spaceDown = true
     cat.reload = cat.reloadTime
     cat.sloMoMeter = 0

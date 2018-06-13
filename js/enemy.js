@@ -47,6 +47,7 @@ const EnemyHit = function(damage, cat){
         cat.sloMoMeter += 5
         this.game.score(this.points)
         this.board.remove(this)
+        explosion_sound.play()
         this.board.add(CreateExplosion(
             game, spriteSheet, this.x + this.w/2, this.y + this.h/2
         ))        
@@ -61,7 +62,7 @@ const CreateEnemy = function(game, spriteSheet, blueprint, override) {
     override = override || {}
     let en = Object
         .create(Sprite)
-        .init(spriteSheet, override.enemyType || blueprint.enemyType)   
+        .init(spriteSheet, override.enemyType || blueprint.enemyType)   //TODO should be .sprite
     Object.assign(en, {
         A:0,B:0,C:0,D:0,E:0,F:0,G:0,H:0,t:0, // defaults
         x:0,y:-en.h,

@@ -20,7 +20,8 @@ const SPRITES = {
     gray_cat:      { sx: 0, sy: 224, w: 32, h: 32, frames: 1 },
     blank_cat:     { sx: 0, sy: 256, w: 32, h: 32, frames: 1 },
     cat_missile:{ sx: 8, sy: 40, w: 2, h:16, frames: 1 },
-    square:     { sx:16, sy: 10, w: 1, h: 1, frames: 1 }
+    square:     { sx:16, sy: 10, w: 1, h: 1, frames: 1 },
+    hand:       { sx: 0, sy: 288, w: 32, h: 64, frames: 1},
 }
 
 
@@ -70,7 +71,7 @@ const PlayGame = () => {
     let randLevel = ["STICKY_SITUATION", "EXAMPLE_LEVEL", "HERDING_CATS"][randomInt(0,2)]
     gameBoard.add(CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame))
 
-    game.setBoard(4, CreateHud(game, spriteSheet, cat, 5, {
+    game.setBoard(5, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
         dScore: 0
     }))
