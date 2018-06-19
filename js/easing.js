@@ -8,7 +8,13 @@ const basicEasing = function(dt){
           vy = (this.target_y - this.y) * this.ease
     this.x += vx * dt * 60
     this.y += vy * dt * 60
-    return (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x))
+    if (closeEnough(this.y,this.target_y) && closeEnough(this.x, this.target_x)){
+        this.x = this.target_x
+        this.y = this.target_y
+        return true
+    } else {
+        return false
+    }
 }
 const linearEasing = function(dt){
     this.wait -= dt * 60
@@ -63,23 +69,41 @@ const CYKOD_PATTERN = [
         done: () => {}
     }
 ]
+// const horizontalSinusoid = function(dt){
+//     this.t += dt
+//     // constant horizontal velocity
+//     this.vx = this.A 
 
-// const LEFT_UP_RIGHT_TOSS = [
+//     this.x += this.vx * dt
+//     this.y = this.E + this.F * Math.sin(this.G * (this.t) + this.H*window.QQQ)
+// }
+// const HORIZONTAL_SINUSOID_PATTERN = [
 //     {
-//         done: function(){
-//             this.x = -this.w
-//             this.y = nnBnn(this.game, 16, 16, 0, 6).y
-//             this.target_y = this.y
-//             this.target_x = this.game.maxX + 5
+//         done: function() {
+//             this.armed = true
+//             this.t = 0
+//             if (!window.QQ){
+//                 window.QQQ = 0
+//                 window.QQQQ = setInterval(()=> {
+//                     window.QQQ += (1/60)
+//                     // console.log(window.QQQ)
+//                 }, 50)
+//                 window.QQ = 55
+//             }
+//             window.QQ--
+
 //             this.patterns.ptr++
 //         }
-//     },{
-//         ease: cykodEasing,
-//         done: ()=>{}
+//     },
+//     {
+//         ease: horizontalSinusoid,
+//         done: () => {
+//             if (window.QQ === 1){
+//                 clearInterval(window.QQQQ)
+//             }
+//         }
 //     }
-
 // ]
-
 const SNAKE_PATTERN = [
     {   
         done: function(){
@@ -128,7 +152,63 @@ const SNAKE_PATTERN = [
         }
     },
 ]
-
+const STRAIGHT_WITH_BREAKS = [
+    {   
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.y = -32
+            this.target_x = this.x || 0
+            this.target_y = this.h
+            this.wait = 100
+            this.patterns.ptr++
+        }
+    },
+    {// slide down
+        ease: linearEasing,
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.patterns.ptr++
+        }
+    },
+    {// jump to left
+        ease: basicEasing,
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.wait = 120
+            this.patterns.ptr++
+        }
+    },
+    {// stop and fire
+        ease: attackWait,
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.armed = false
+            const target = nnBnn(this.game,6,12,randomInt(3,5),randomInt(0,5))
+            this.target_x = target.x
+            this.target_y = target.y
+            this.patterns.ptr++
+        }
+    },
+    {// jump to right
+        ease: basicEasing,
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.wait = 120
+            this.patterns.ptr++
+        }
+    },
+    {// stop and fire
+        ease: attackWait,
+        done: function(){
+            console.log(this.patterns.ptr)
+            this.armed = false
+            const target = nnBnn(this.game,6,12,randomInt(0,2),randomInt(0,5))
+            this.target_x = target.x
+            this.target_y = target.y
+            this.patterns.ptr = 2
+        }
+    },
+]
 const PING_PONG_PATTERN = [
     {
         ease: basicEasing,

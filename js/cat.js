@@ -29,30 +29,30 @@ const CatStep = function(dt){
 
     // shoot
     if (gKeys.z && !this.zDown) {
-        console.log("Z DOWN")
+        // console.log("Z DOWN")
         
-        this.fireFrame = 0
+        this.fireFrame = 3000
         this.zDown = true
     } else if (!gKeys.z && this.zDown){
-        console.log("Z UP")
+        // console.log("Z UP")
         this.zDown = false
     }
 
     if (this.zDown){
-        if (Math.floor(this.fireFrame) % 6 === 0){
+        this.fireFrame += Math.floor(dt * 60 * 1000)
+        if (this.fireFrame > 6000){
+            // debugger
             shot_sound.play()
-            let cmL = CreateCatMissile(
+            this.board.add(CreateCatMissile(
                 game, spriteSheet, this.x, this.y,
                 { cat: this }
-            )
-            let cmR = CreateCatMissile(
+            ))
+            this.board.add(CreateCatMissile(
                 game, spriteSheet, this.x+this.w, this.y,
                 { cat: this }
-            )
-            this.board.add(cmL)
-            this.board.add(cmR)
-        }
-        this.fireFrame += dt * 60
+            ))
+            this.fireFrame = Math.floor(this.fireFrame - 6000)
+        }        
     }
 
     // text explosion

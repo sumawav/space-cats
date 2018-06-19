@@ -1,22 +1,19 @@
 const LevelStep = function(dt){
     let idx = 0,
         remove = [],
-        curShip = null
+        curWave = null
     this.t += dt * 1000
 
-    while( (curShip = this.levelData[idx]) && (curShip[0] < this.t + 2000)) {
-        if (this.t > curShip[1]){
-            remove.push(curShip)
-        } else if (curShip[0] < this.t){
-            let bluePrint = enemies(this.game, curShip[3])
-            let override = curShip[4]
+    while( (curWave = this.levelData[idx]) && (curWave[0] < this.t + 2000)) {
+        if (this.t > curWave[1]){
+            remove.push(curWave)
+        } else if (curWave[0] < this.t){
+            let bluePrint = enemies(this.game, curWave[3])
+            let override = curWave[4]
             const enemy = CreateEnemy(this.game, this.spriteSheet, bluePrint, override)
             
-            if (curShip[3] === "left_up_right_toss")
-                window.Q = enemy
-
             this.board.add(enemy)
-            curShip[0] += curShip[2]
+            curWave[0] += curWave[2]
         }
         idx++
     }
@@ -28,11 +25,21 @@ const LevelStep = function(dt){
         }
     })
 
+    if (this.levelData.length === 0 && this.appendQueue.length){
+        this.levelData = this.appendQueue.shift()
+        this.t = 0
+        return
+    }
+
     if (this.levelData.length === 0 && this.board.cnt[OBJECT_ENEMY] === 0) {
         this.board.remove(this)
         if (typeof this.callback === "function" && !this.game.gameOver) 
             this.callback();
     }
+}
+
+const QueueAppendLevel = function(levelData) {
+    this.appendQueue.push(levelData)
 }
 
 const CreateLevel = (game, spriteSheet, levelData, callback) => {
@@ -43,11 +50,13 @@ const CreateLevel = (game, spriteSheet, levelData, callback) => {
             return Object.create(e)
         }),
         t: 0,
-        callback: callback
+        callback: callback,
+        appendQueue: [],
     }
     Object.assign(level, {
         draw: ()=>{},
-        step: LevelStep
+        step: LevelStep,
+        queue: QueueAppendLevel
     })
     return level
 }

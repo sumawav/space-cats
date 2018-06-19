@@ -93,12 +93,26 @@ const CreateDanmakuConfig = (target) => ({
     }
 })
 
+
+// danmaku descriptions
+// Danmaku_00: shoots a single lightly aimed purple bullet with random wait ten times
+// Danmaku_01: 
+// Danmaku_02: shoots burst of precise aimed red bullets ten times
+// Danmaku_03: 
+// Danmaku_04: 
+// Danmaku_05: 
+// Danmaku_06: shoots straight up
+// Danmaku_07: shoots straight down
+// Danmaku_08: shoots three bullets downward
+// Danmaku_09: 
+
 bulletml.dsl("bml_");
 Danmaku_00 = new bulletml.Root({
     top: bml_action([
         bml_repeat(10, [
-            bml_wait("240+ $rand * 240"),
-            bml_fire(bml_speed(1.5), bml_bullet())
+            bml_wait("$rand * 240"),
+            bml_fire(bml_direction("-30 + $rand * 60", "aim"), bml_speed(1.5), bml_bullet()),
+            bml_wait("240"),
         ]),
     ]),
 });
@@ -141,7 +155,7 @@ Danmaku_02 = new bulletml.Root({
                 bml_wait(5),
                 bml_fire(bml_speed(0, "sequence"), bml_direction(0, "sequence"), bml_bullet({ tint: 0xFF8888FF})),
             ]),
-            bml_wait(60)
+            bml_wait("60 + $rand * 30")
         ]),
     ]),
 });
@@ -192,6 +206,51 @@ Danmaku_05 = new bulletml.Root({
                 bml_fire(bml_speed(0.5, "sequence"), bml_direction(0, "sequence"), bml_bullet({ tint: 0xFFFF88FF})),
             ]),
             bml_wait(40)
+        ]),
+    ]),
+});
+Danmaku_06 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(10, [
+            bml_wait("$rand * 240"),
+            bml_fire(bml_direction(0, "absolute"), bml_speed(1.5), bml_bullet()),
+            bml_wait("240"),
+        ]),
+    ]),
+});
+Danmaku_07 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(10, [
+            bml_wait("$rand * 240"),
+            bml_fire(bml_direction(180, "absolute"), bml_speed(1.5), bml_bullet()),
+            bml_wait("240"),
+        ]),
+    ]),
+});
+Danmaku_08 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(10, [
+            bml_wait("$rand * 240"),
+            bml_fire(bml_direction(165, "absolute"), bml_speed(1.5), bml_bullet({ tint: 0xFF88FFFF})),
+            bml_repeat(2, [
+                bml_fire(bml_direction(15, "sequence"), bml_speed(1.5), bml_bullet({ tint: 0xFF88FFFF}))
+            ]),
+            bml_wait("240"),
+        ]),
+    ]),
+});
+Danmaku_09 = new bulletml.Root({
+    top: bml_action([
+        bml_repeat(Infinity, [
+            bml_repeat(5, [
+                bml_fire(bml_direction(0, "absolute"), bml_speed(1.5), bml_bullet()),
+                bml_repeat(17, [
+                    // bml_wait(1),
+                    bml_fire(bml_direction(20, "sequence"), bml_speed(0, "sequence"), bml_bullet()),
+                ]),
+                bml_changeSpeed(1.6,0),
+                bml_wait(20)
+            ]),
         ]),
     ]),
 });

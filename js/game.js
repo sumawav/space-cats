@@ -61,7 +61,9 @@ const PlayGame = () => {
     cat = CreateCat(game, spriteSheet, "orange_cat", {
         tint: 0x00000000,
         maxVel: 200,
-        sloMoMeter: 100
+        sloMoMeter: 100,
+        x: game.maxX/2 - 16,
+        y: 2*game.maxY/4,
     })
     danmakuConfig = CreateDanmakuConfig(cat)
     gameBoard.add(cat)
@@ -69,14 +71,15 @@ const PlayGame = () => {
     game.removeBoard(2)
 
     let randLevel = ["STICKY_SITUATION", "EXAMPLE_LEVEL", "HERDING_CATS"][randomInt(0,2)]
-    gameBoard.add(CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame))
+    BAD_LEVEL_NAME = CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame)
+    gameBoard.add(
+        BAD_LEVEL_NAME
+    )
 
     game.setBoard(5, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,
         dScore: 0
     }))
-    
-    
 }
 
 const GameOver = () => {

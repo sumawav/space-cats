@@ -12,8 +12,14 @@ const enemies = (game, type) => {
     switch(type){
         case "straight": 
             blueprint = { 
-                x: 0, y: -50, enemyType: "teal_cat", health: 5, 
+                x: 0, y: -32, enemyType: "teal_cat", health: 10, 
                 E: 100, points: 17, patterns: { list: CYKOD_PATTERN, ptr: 0 }
+            }
+            break
+        case "straight_with_breaks":
+            blueprint = { 
+                x: 0, y: -32, enemyType: "teal_cat", health: 10, 
+                points: 17, patterns: { list: STRAIGHT_WITH_BREAKS, ptr: 0 }
             }
             break
         case "ltr": 
@@ -63,23 +69,23 @@ const enemies = (game, type) => {
             break
         case "snake":
             blueprint = {
-                enemyType: "purple_cat", health: 5, points: 7,
+                enemyType: "purple_cat", health: 3, points: 7,
                 patterns: { list: SNAKE_PATTERN, ptr: 0 }
             }
             break
-        case "left_up_right_toss":
-            blueprint = {
-                x: -32, y: 4*game.maxY/16, 
-                enemyType: "orange_cat", health: 2, points: 7,
-                A: 200, F: 100, G:1, H:0,
+        case "horizontal_arc":
+            blueprint =  {
+                x: -32, y: 12*game.maxY/16, 
+                enemyType: "black_cat", health: 2, points: 7,
+                A: 400, F: 100, G:1, H:0,
                 patterns: { list: CYKOD_PATTERN, ptr: 0 }
             }
             break
-        case "left_up_right_toss2":
+        case "vertical_arc":
             blueprint = {
-                x: -32, y: 12*game.maxY/16, 
+                x: game.maxX/2 - 16, y:-32,
                 enemyType: "black_cat", health: 2, points: 7,
-                A: 200, F: 100, G:1, H: PI/2,
+                E: 400, B: 100, C:1, D:0,
                 patterns: { list: CYKOD_PATTERN, ptr: 0 }
             }
             break
@@ -90,4 +96,4 @@ const enemies = (game, type) => {
             }
     }
     return blueprint
-};
+}
