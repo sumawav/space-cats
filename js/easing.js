@@ -324,11 +324,11 @@ const TEST_PATTERN = [
     },
 ]
 
-const TEST_PATTERN2 = [
+const BOSS_1_PATTERN = [
     {
         ease: function(){
             this.target_x = 0
-            this.target_y = 0
+            this.target_y = 2*this.h
             return true
         },
         done: function(){
@@ -339,7 +339,7 @@ const TEST_PATTERN2 = [
         ease: basicEasing,
         done: function(){
             this.target_x = this.game.maxX - this.w
-            this.target_y = 0
+            this.target_y = 2*this.h
             this.runner = createRunner(5, danmakuConfig)
             this.wait = 205
             this.armed = true
@@ -359,7 +359,12 @@ const TEST_PATTERN2 = [
         done: function(){      
             this.target_x = randomInt(this.game.maxX/4, this.game.maxX/2)
             this.target_y = randomInt(0.1*this.game.maxY, 0.2*this.game.maxY)
-            this.runner = createRunner(4, danmakuConfig)      
+            this.runner = createRunner(4, danmakuConfig)
+            if (randomInt(1,2) === 2){
+                CURRENT_LEVEL.queue([
+                    [0, 1000,  100, "snake", { enemyType: "black_cat", health: 8 }],
+                ])
+            }
             this.patterns.ptr++
         }
     },

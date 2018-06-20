@@ -104,7 +104,7 @@ const CreateDanmakuConfig = (target) => ({
 // Danmaku_06: shoots straight up
 // Danmaku_07: shoots straight down
 // Danmaku_08: shoots three bullets downward
-// Danmaku_09: 
+// Danmaku_09: continuous radial blasts
 
 bulletml.dsl("bml_");
 Danmaku_00 = new bulletml.Root({
@@ -155,7 +155,7 @@ Danmaku_02 = new bulletml.Root({
                 bml_wait(5),
                 bml_fire(bml_speed(0, "sequence"), bml_direction(0, "sequence"), bml_bullet({ tint: 0xFF8888FF})),
             ]),
-            bml_wait("60 + $rand * 30")
+            bml_wait("60 + $rand * 120")
         ]),
     ]),
 });
@@ -231,11 +231,11 @@ Danmaku_08 = new bulletml.Root({
     top: bml_action([
         bml_repeat(10, [
             bml_wait("$rand * 240"),
-            bml_fire(bml_direction(165, "absolute"), bml_speed(1.5), bml_bullet({ tint: 0xFF88FFFF})),
+            bml_fire(bml_direction(165, "absolute"), bml_speed(2.0), bml_bullet({ tint: 0xFF88FFFF})),
             bml_repeat(2, [
-                bml_fire(bml_direction(15, "sequence"), bml_speed(1.5), bml_bullet({ tint: 0xFF88FFFF}))
+                bml_fire(bml_direction(15, "sequence"), bml_speed(2.0), bml_bullet({ tint: 0xFF88FFFF}))
             ]),
-            bml_wait("240"),
+            bml_wait("120"),
         ]),
     ]),
 });

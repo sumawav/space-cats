@@ -8,6 +8,8 @@ const OBJECT_PLAYER             = 1,
       OBJECT_ENEMY              = 4,
       OBJECT_ENEMY_PROJECTILE   = 8,
       OBJECT_POWERUP            = 16
+let CURRENT_LEVEL
+
 
 const SPRITES = {
     cat:           { sx: 0, sy: 0, w: 32, h: 32, frames: 1 },
@@ -71,10 +73,8 @@ const PlayGame = () => {
     game.removeBoard(2)
 
     let randLevel = ["STICKY_SITUATION", "EXAMPLE_LEVEL", "HERDING_CATS"][randomInt(0,2)]
-    BAD_LEVEL_NAME = CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame)
-    gameBoard.add(
-        BAD_LEVEL_NAME
-    )
+    CURRENT_LEVEL = CreateLevel(game, spriteSheet, GetLevel(game, config.level || randLevel, {offset: game.maxY/4}), WinGame)
+    gameBoard.add(CURRENT_LEVEL)
 
     game.setBoard(5, CreateHud(game, spriteSheet, cat, 5, {
         numberSheet: numberSheet,

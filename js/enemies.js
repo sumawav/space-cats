@@ -50,12 +50,12 @@ const enemies = (game, type) => {
                 patterns: { list: CYKOD_PATTERN, ptr: 0 }
             }
             break
-        case "still":
+        case "boss1":
             let x = game ? game.maxX / 2 : 100
             let y = game ? game.maxY / 4: 100
             blueprint = {
-                x: x, y: y, enemyType: "green_cat", health: 100,
-                points: 307, patterns: { list: TEST_PATTERN2, ptr: 0}
+                x: 2*x, y: 2*y, enemyType: "green_cat", health: 100,
+                points: 307, patterns: { list: BOSS_1_PATTERN, ptr: 0}
             }
             break
         case "pingpong":
